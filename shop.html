@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shop All Products — KMAC Tech</title>
+  <meta name="description" content="Browse our full collection of premium MacBook cases, laptop sleeves, gaming mousepads, chargers, and more. Free US shipping on all orders.">
+  <meta property="og:title" content="Shop All Products — KMAC Tech">
+  <meta property="og:description" content="Browse premium tech accessories. Free US shipping.">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='80'>💻</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/pages.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "Shop All Products",
+    "description": "Browse our full collection of premium tech accessories.",
+    "url": "https://kmactech.com/shop.html",
+    "breadcrumb": {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://kmactech.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Shop" }
+      ]
+    }
+  }
+  </script>
+</head>
+<body>
+  <a href="#main-content" class="skip-nav">Skip to main content</a>
+
+  <header class="header" id="header" role="banner">
+    <div class="container flex-between">
+      <a href="index.html" class="logo" aria-label="KMAC Tech — Home">KMAC<span>Tech</span></a>
+      <nav class="nav-links" aria-label="Main navigation"><a href="index.html" data-i18n="nav.home">Home</a><a href="shop.html" class="active" data-i18n="nav.shop">Shop</a><a href="blog.html" data-i18n="nav.blog">Blog</a><a href="cart.html" data-i18n="nav.cart">Cart</a></nav>
+      <div class="header-actions">
+        <div class="lang-switcher" aria-label="Language Switcher">
+          <button class="lang-btn active" data-lang="en" onclick="switchLang('en')" aria-label="Switch to English">🇺🇸 EN</button>
+          <button class="lang-btn" data-lang="vn" onclick="switchLang('vn')" aria-label="Switch to Vietnamese">🇻🇳 VN</button>
+        </div>
+        <button class="btn-icon" data-search-toggle aria-label="Search products"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></button>
+        <a href="cart.html" class="btn-icon" aria-label="Shopping cart"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg><span class="cart-count" aria-label="Cart items">0</span></a>
+        <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle menu" aria-expanded="false"><span></span><span></span><span></span></button>
+      </div>
+    </div>
+  </header>
+  <div class="mobile-menu" id="mobileMenu" role="navigation" aria-label="Mobile navigation"><a href="index.html">🏠 Home</a><a href="shop.html">🛍️ Shop</a><a href="blog.html">📝 Blog</a><a href="cart.html">🛒 Cart</a></div>
+
+  <main id="main-content">
+    <section class="shop-header">
+      <div class="container">
+        <div class="breadcrumb" aria-label="Breadcrumb"><a href="index.html">Home</a><span>›</span>Shop</div>
+        <h1>All Products</h1>
+        <p style="color:var(--text-sec);">Find the perfect accessory for your tech setup 🎯</p>
+      </div>
+    </section>
+
+    <section class="container">
+      <div class="shop-layout">
+        <aside class="shop-sidebar" aria-label="Product filters">
+          <!-- Silo 1: Laptops -->
+          <div class="filter-group"><h3 data-i18n="filter.laptops">💻 Laptops</h3><div class="filter-options">
+            <label><input type="checkbox" value="cases" class="filter-cat"> <span data-i18n="filter.mbpro">MacBook Pro (M1–M4)</span></label>
+            <label><input type="checkbox" value="sleeves" class="filter-cat"> <span data-i18n="filter.mbair">MacBook Air</span></label>
+            <label><input type="checkbox" value="gaming" class="filter-cat"> <span data-i18n="filter.gaming">Gaming Laptops</span></label>
+          </div></div>
+          <!-- Silo 2: Protection -->
+          <div class="filter-group"><h3 data-i18n="filter.protection">🛡️ Protection</h3><div class="filter-options">
+            <label><input type="checkbox" value="cases" class="filter-cat"> <span data-i18n="filter.iphonecases">iPhone Cases (12–17 Pro Max)</span></label>
+            <label><input type="checkbox" value="sleeves" class="filter-cat"> <span data-i18n="filter.skins">MacBook Full-body Skins</span></label>
+            <label><input type="checkbox" value="sleeves" class="filter-cat"> <span data-i18n="filter.sleeves">Sleeves & Bags</span></label>
+          </div></div>
+          <!-- Silo 3: Peripherals -->
+          <div class="filter-group"><h3 data-i18n="filter.peripherals">🔌 Peripherals</h3><div class="filter-options">
+            <label><input type="checkbox" value="chargers" class="filter-cat"> <span data-i18n="filter.hdmi">High-speed HDMI</span></label>
+            <label><input type="checkbox" value="chargers" class="filter-cat"> <span data-i18n="filter.hubs">USB-C 10-in-1 Hubs</span></label>
+            <label><input type="checkbox" value="chargers" class="filter-cat"> <span data-i18n="filter.adapters">Adapters & Cables</span></label>
+          </div></div>
+          <!-- Price & Rating -->
+          <div class="filter-group"><h3 data-i18n="filter.price">Price Range</h3><div class="filter-options">
+            <label><input type="checkbox" value="0-25" class="filter-price"> Under $25</label>
+            <label><input type="checkbox" value="25-40" class="filter-price"> $25 – $40</label>
+            <label><input type="checkbox" value="40-100" class="filter-price"> $40 – $100</label>
+          </div></div>
+          <div class="filter-group"><h3 data-i18n="filter.rating">Rating</h3><div class="filter-options">
+            <label><input type="checkbox" value="5" class="filter-rating"> ★★★★★ only</label>
+            <label><input type="checkbox" value="4" class="filter-rating"> ★★★★☆ & up</label>
+          </div></div>
+          <button class="btn btn-secondary btn-sm" onclick="clearFilters()" style="width:100%;margin-top:8px;" data-i18n="filter.clear">Clear Filters</button>
+        </aside>
+        <div>
+          <div class="shop-controls">
+            <span class="result-count" id="resultCount" aria-live="polite">8 Products</span>
+            <div style="display:flex;gap:12px;align-items:center;">
+              <button class="btn btn-outline btn-sm filter-drawer-toggle" onclick="document.querySelector('.shop-sidebar').style.display='block'" aria-label="Show filters">☰ Filters</button>
+              <label for="sortSelect" class="sr-only">Sort products</label>
+              <select id="sortSelect" onchange="applyFilters()">
+                <option value="best">Best Selling</option>
+                <option value="price-asc">Price: Low → High</option>
+                <option value="price-desc">Price: High → Low</option>
+                <option value="newest">Newest</option>
+              </select>
+            </div>
+          </div>
+          <div class="products-grid" id="productsGrid" role="list" aria-label="Product list"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand"><div class="logo">KMAC<span class="footer-logo-white">Tech</span></div><p>Premium tech accessories designed with love. 🇺🇸</p></div>
+        <div><h4>Shop</h4><div class="footer-links"><a href="shop.html">All Products</a><a href="shop.html?cat=cases">MacBook Cases</a><a href="shop.html?cat=gaming">Gaming Gear</a></div></div>
+        <div><h4>Help</h4><div class="footer-links"><a href="#">Contact Us</a><a href="#">Shipping</a><a href="#">Returns</a></div></div>
+        <div><h4>Follow</h4><div class="footer-links"><a href="#">Instagram</a><a href="#">TikTok</a><a href="#">Twitter</a></div></div>
+      </div>
+      <div class="footer-bottom"><span>© 2026 KMAC Tech. All rights reserved.</span><div class="payment-icons"><span>Visa</span><span>Mastercard</span><span>PayPal</span><span>Apple Pay</span></div></div>
+    </div>
+  </footer>
+
+  <div class="modal-overlay" id="quickViewModal" role="dialog" aria-label="Quick view" aria-modal="true">
+    <div class="modal"><button class="modal-close" onclick="closeQuickView()" aria-label="Close">✕</button><div class="modal-grid" id="quickViewContent"></div></div>
+  </div>
+
+  <script src="js/main.js" defer></script>
+  <script src="js/i18n.js" defer></script>
+  <script src="js/shop.js" defer></script>
+</body>
+</html>

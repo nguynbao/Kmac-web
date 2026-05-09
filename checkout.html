@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout — KMAC Tech</title>
+  <meta name="description" content="Complete your purchase securely at KMAC Tech. Free US shipping, multiple payment options.">
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='80'>💻</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/pages.css">
+</head>
+<body>
+  <a href="#main-content" class="skip-nav">Skip to main content</a>
+  <header class="header" id="header" role="banner">
+    <div class="container flex-between">
+      <a href="index.html" class="logo" aria-label="KMAC Tech — Home">KMAC<span>Tech</span></a>
+      <nav class="nav-links" aria-label="Main navigation"><a href="index.html" data-i18n="nav.home">Home</a><a href="shop.html" data-i18n="nav.shop">Shop</a><a href="cart.html" data-i18n="nav.cart">Cart</a></nav>
+      <div class="header-actions">
+        <div class="lang-switcher" aria-label="Language Switcher">
+          <button class="lang-btn active" data-lang="en" onclick="switchLang('en')" aria-label="Switch to English">🇺🇸 EN</button>
+          <button class="lang-btn" data-lang="vn" onclick="switchLang('vn')" aria-label="Switch to Vietnamese">🇻🇳 VN</button>
+        </div>
+        <a href="cart.html" class="btn-icon" aria-label="Shopping cart"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg><span class="cart-count" aria-label="Cart items">0</span></a>
+        <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle menu" aria-expanded="false"><span></span><span></span><span></span></button>
+      </div>
+    </div>
+  </header>
+  <div class="mobile-menu" id="mobileMenu" role="navigation" aria-label="Mobile navigation"><a href="index.html">🏠 Home</a><a href="shop.html">🛍️ Shop</a><a href="cart.html">🛒 Cart</a></div>
+
+  <main id="main-content">
+    <section class="checkout-page">
+      <div class="container">
+        <nav class="breadcrumb" aria-label="Breadcrumb"><a href="index.html">Home</a><span>›</span><a href="cart.html">Cart</a><span>›</span>Checkout</nav>
+        <h1 style="font-size:1.8rem;margin:16px 0 32px;">Checkout 🔒</h1>
+        <div class="checkout-layout">
+          <div class="checkout-form">
+            <!-- Contact -->
+            <div class="checkout-section">
+              <h2><span class="step-num">1</span> Contact Information</h2>
+              <div class="form-row">
+                <div class="input-group"><input type="email" id="email" placeholder="Email address" required autocomplete="email"><label for="email">Email</label></div>
+                <div class="input-group"><input type="tel" id="phone" placeholder="Phone number" autocomplete="tel"><label for="phone">Phone</label></div>
+              </div>
+            </div>
+            <!-- Shipping -->
+            <div class="checkout-section">
+              <h2><span class="step-num">2</span> Shipping Address</h2>
+              <div class="form-row">
+                <div class="input-group"><input type="text" id="firstName" placeholder="First name" required autocomplete="given-name"><label for="firstName">First Name</label></div>
+                <div class="input-group"><input type="text" id="lastName" placeholder="Last name" required autocomplete="family-name"><label for="lastName">Last Name</label></div>
+              </div>
+              <div class="form-row single"><div class="input-group"><input type="text" id="address" placeholder="Street address" required autocomplete="street-address"><label for="address">Address</label></div></div>
+              <div class="form-row">
+                <div class="input-group"><input type="text" id="city" placeholder="City" required autocomplete="address-level2"><label for="city">City</label></div>
+                <div class="input-group">
+                  <select id="state" required autocomplete="address-level1">
+                    <option value="">Select state</option>
+                  </select>
+                  <label for="state">State</label>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="input-group"><input type="text" id="zip" placeholder="ZIP code" required autocomplete="postal-code"><label for="zip">ZIP Code</label></div>
+                <div class="input-group"><input type="text" value="United States" readonly style="background:var(--bg);" aria-label="Country"><label>Country</label></div>
+              </div>
+            </div>
+            <!-- Shipping Method -->
+            <div class="checkout-section">
+              <h2><span class="step-num">3</span> Shipping Method</h2>
+              <div class="shipping-options" role="radiogroup" aria-label="Shipping method">
+                <label class="shipping-option active" onclick="selectShipping(this,0)">
+                  <input type="radio" name="shipping" value="standard" checked>
+                  <div style="flex:1"><strong>Standard Shipping</strong><br><span style="font-size:.85rem;color:var(--text-sec)">3–5 business days</span></div>
+                  <strong style="color:var(--green)">FREE</strong>
+                </label>
+                <label class="shipping-option" onclick="selectShipping(this,9.99)">
+                  <input type="radio" name="shipping" value="express">
+                  <div style="flex:1"><strong>Express Shipping</strong><br><span style="font-size:.85rem;color:var(--text-sec)">1–2 business days</span></div>
+                  <strong>$9.99</strong>
+                </label>
+              </div>
+            </div>
+            <!-- Payment -->
+            <div class="checkout-section">
+              <h2><span class="step-num">4</span> Payment</h2>
+              <div class="payment-methods" role="group" aria-label="Payment method">
+                <button class="payment-method active" onclick="selectPayment(this,'card')" aria-pressed="true">💳 Card</button>
+                <button class="payment-method" onclick="selectPayment(this,'paypal')" aria-pressed="false">PayPal</button>
+                <button class="payment-method" onclick="selectPayment(this,'applepay')" aria-pressed="false">Apple Pay</button>
+              </div>
+              <div class="card-fields" id="cardFields">
+                <div class="input-group"><input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" autocomplete="cc-number"><label for="cardNumber">Card Number</label></div>
+                <div class="form-row">
+                  <div class="input-group"><input type="text" id="cardExpiry" placeholder="MM / YY" autocomplete="cc-exp"><label for="cardExpiry">Expiry</label></div>
+                  <div class="input-group"><input type="text" id="cardCvc" placeholder="123" autocomplete="cc-csc"><label for="cardCvc">CVC</label></div>
+                </div>
+              </div>
+              <div class="security-badges" style="margin-top:20px;">
+                <div class="security-badge">🔒 SSL Encrypted</div>
+                <div class="security-badge">💰 Money-Back Guarantee</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Order Sidebar -->
+          <div class="order-sidebar">
+            <div class="order-items" id="orderItems"></div>
+            <div class="cart-summary" id="orderSummary"></div>
+            <button class="btn btn-primary place-order-btn btn-lg" onclick="placeOrder()" style="margin-top:16px;" id="placeOrderBtn">🔒 Place Order</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="footer-bottom"><span>© 2026 KMAC Tech. All rights reserved.</span><div class="payment-icons"><span>Visa</span><span>MC</span><span>PayPal</span><span>Apple Pay</span></div></div>
+    </div>
+  </footer>
+
+  <script src="js/main.js" defer></script>
+  <script src="js/i18n.js" defer></script>
+  <script src="js/checkout.js" defer></script>
+</body>
+</html>

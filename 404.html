@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Page Not Found — KMAC Tech</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='80'>💻</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/pages.css">
+</head>
+<body>
+  <a href="#main-content" class="skip-nav">Skip to main content</a>
+  <header class="header" id="header" role="banner">
+    <div class="container flex-between">
+      <a href="index.html" class="logo" aria-label="KMAC Tech — Home">KMAC<span>Tech</span></a>
+      <nav class="nav-links" aria-label="Main navigation"><a href="index.html">Home</a><a href="shop.html">Shop</a><a href="blog.html">Blog</a><a href="cart.html">Cart</a></nav>
+      <div class="header-actions">
+        <div class="lang-switcher" aria-label="Language Switcher">
+          <button class="lang-btn active" data-lang="en" onclick="switchLang('en')" aria-label="Switch to English">🇺🇸 EN</button>
+          <button class="lang-btn" data-lang="vn" onclick="switchLang('vn')" aria-label="Switch to Vietnamese">🇻🇳 VN</button>
+        </div>
+        <button class="btn-icon" data-search-toggle aria-label="Search products"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></button>
+        <a href="cart.html" class="btn-icon" aria-label="Shopping cart"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg><span class="cart-count" aria-label="Cart items">0</span></a>
+        <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle menu" aria-expanded="false"><span></span><span></span><span></span></button>
+      </div>
+    </div>
+  </header>
+  <div class="mobile-menu" id="mobileMenu" role="navigation" aria-label="Mobile navigation"><a href="index.html">🏠 Home</a><a href="shop.html">🛍️ Shop</a><a href="blog.html">📝 Blog</a><a href="cart.html">🛒 Cart</a></div>
+
+  <main id="main-content">
+    <section style="text-align:center;padding:120px 24px 80px;">
+      <div class="container">
+        <div style="font-size:6rem;margin-bottom:24px;">🔍</div>
+        <h1 style="font-size:3rem;margin-bottom:12px;">404</h1>
+        <h2 style="font-size:1.4rem;font-weight:500;color:var(--text-sec);margin-bottom:32px;">Oops! This page doesn't exist.</h2>
+        <p style="color:var(--text-sec);margin-bottom:40px;max-width:480px;margin-left:auto;margin-right:auto;">The page you're looking for might have been moved or doesn't exist anymore. Let's get you back on track!</p>
+        <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
+          <a href="index.html" class="btn btn-primary btn-lg">← Back to Home</a>
+          <a href="shop.html" class="btn btn-secondary btn-lg">Browse Shop</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Popular Products -->
+    <section class="section" style="background:var(--blue-light);">
+      <div class="container">
+        <h2 class="section-title">Popular Products ⭐</h2>
+        <p class="section-subtitle">While you're here, check out our bestsellers</p>
+        <div class="grid grid-4" id="popularGrid"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="footer-bottom"><span>© 2026 KMAC Tech. All rights reserved.</span><div class="payment-icons"><span>Visa</span><span>MC</span><span>PayPal</span><span>Apple Pay</span></div></div>
+    </div>
+  </footer>
+
+  <script src="js/main.js" defer></script>
+  <script src="js/i18n.js" defer></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const grid = document.getElementById('popularGrid');
+      if (grid) {
+        grid.innerHTML = PRODUCTS.slice(0, 4).map(p => renderProductCard(p)).join('');
+      }
+    });
+  </script>
+</body>
+</html>

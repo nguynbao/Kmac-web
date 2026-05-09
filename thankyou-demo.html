@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KMAC Tech — Order Confirmation (QR Payment Demo)</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='80'>💻</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/pages.css">
+</head>
+<body>
+  <a href="#main-content" class="skip-nav">Skip to main content</a>
+
+  <!-- Header -->
+  <header class="header" id="header" role="banner">
+    <div class="container flex-between">
+      <a href="index.html" class="logo" aria-label="KMAC Tech — Home">KMAC<span>Tech</span></a>
+      <nav class="nav-links" aria-label="Main navigation">
+        <a href="index.html">Home</a>
+        <a href="shop.html">Shop</a>
+        <a href="blog.html">Blog</a>
+        <a href="cart.html">Cart</a>
+      </nav>
+      <div class="header-actions">
+        <!-- Language Switcher -->
+        <div class="lang-switcher" id="langSwitcher" aria-label="Language Switcher">
+          <button class="lang-btn active" data-lang="en" onclick="switchLang('en')" aria-label="Switch to English">🇺🇸 EN</button>
+          <button class="lang-btn" data-lang="vn" onclick="switchLang('vn')" aria-label="Switch to Vietnamese">🇻🇳 VN</button>
+        </div>
+        <a href="cart.html" class="btn-icon" aria-label="Shopping cart">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+          <span class="cart-count" aria-label="Cart items">2</span>
+        </a>
+        <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main-content">
+    <section style="padding:48px 0 80px;">
+      <div class="container">
+
+        <!-- Thank You Header -->
+        <div style="text-align:center; margin-bottom:40px;">
+          <div style="font-size:3rem; margin-bottom:8px;">✅</div>
+          <h1 style="font-size:1.8rem; margin-bottom:8px;" data-i18n-key="ty-title">Thank you for your order!</h1>
+          <p style="color:var(--text-sec); font-size:1.05rem;">
+            <span data-i18n-key="ty-order">Order</span> <strong>#KMAC1042</strong>
+            &bull; <strong style="color:var(--blue);">$74.98</strong>
+          </p>
+        </div>
+
+        <!-- ==================== QR PAYMENT SECTION ==================== -->
+        <div class="qr-payment-section" id="qrPaymentSection">
+
+          <!-- Status Banner -->
+          <div class="qr-status-banner">
+            <span class="qr-status-icon">⏳</span>
+            <div>
+              <strong data-i18n-key="ty-pending">Payment Pending</strong>
+              <p style="margin:4px 0 0; font-size:.9rem; opacity:.8;" data-i18n-key="ty-pending-desc">
+                Please complete payment within 30 minutes to confirm your order.
+              </p>
+            </div>
+            <div class="qr-timer" id="qrTimer">30:00</div>
+          </div>
+
+          <!-- Payment Tabs -->
+          <div class="qr-payment-tabs" id="qrTabs" role="tablist">
+            <button class="qr-tab active" data-tab="vietqr" role="tab" aria-selected="true" onclick="switchQrTab('vietqr')">
+              🏦 <span data-i18n-key="ty-tab-bank">Bank Transfer (VietQR)</span>
+            </button>
+            <button class="qr-tab" data-tab="binance" role="tab" aria-selected="false" onclick="switchQrTab('binance')">
+              ₿ <span data-i18n-key="ty-tab-crypto">Crypto (USDT)</span>
+            </button>
+          </div>
+
+          <!-- VietQR Tab -->
+          <div class="qr-tab-content active" id="tab-vietqr" role="tabpanel">
+            <div class="qr-code-container">
+              <img src="https://img.vietqr.io/image/MB-0123456789-compact2.png?amount=1850000&addInfo=KMAC1042&accountName=KMAC%20TECH"
+                   alt="VietQR Payment QR Code"
+                   class="qr-code-img"
+                   id="vietqrImage"
+                   width="300" height="300">
+              <p class="qr-scan-text" data-i18n-key="ty-scan-bank">📱 Scan with your banking app to pay instantly</p>
+            </div>
+
+            <div class="payment-info-grid">
+              <div class="payment-info-row">
+                <span class="info-label" data-i18n-key="ty-bank">Bank</span>
+                <span class="info-value"><strong>MB</strong> (MB Bank)</span>
+              </div>
+              <div class="payment-info-row">
+                <span class="info-label" data-i18n-key="ty-account-no">Account Number</span>
+                <span class="info-value">
+                  <code id="bankAccountNo">0123456789</code>
+                  <button class="copy-btn" onclick="copyText('bankAccountNo')" title="Copy">📋</button>
+                </span>
+              </div>
+              <div class="payment-info-row">
+                <span class="info-label" data-i18n-key="ty-account-name">Account Name</span>
+                <span class="info-value"><strong>KMAC TECH</strong></span>
+              </div>
+              <div class="payment-info-row">
+                <span class="info-label" data-i18n-key="ty-amount">Amount</span>
+                <span class="info-value info-amount">1,850,000 ₫</span>
+              </div>
+              <div class="payment-info-row payment-info-highlight">
+                <span class="info-label" data-i18n-key="ty-transfer-desc">Transfer Description</span>
+                <span class="info-value">
+                  <code id="transferDesc" class="transfer-code">KMAC1042</code>
+                  <button class="copy-btn" onclick="copyText('transferDesc')" title="Copy">📋</button>
+                </span>
+              </div>
+            </div>
+
+            <div class="qr-warning">
+              ⚠️ <span data-i18n-key="ty-warning-bank">Please include the transfer description exactly as shown. This helps us match your payment to your order automatically.</span>
+            </div>
+          </div>
+
+          <!-- Binance Tab -->
+          <div class="qr-tab-content" id="tab-binance" role="tabpanel">
+            <div class="qr-code-container">
+              <img src="https://api.qrserver.com/v1/create-qr-code/?size=280x280&data=TXxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+                   alt="Binance USDT Wallet QR Code"
+                   class="qr-code-img"
+                   width="280" height="280"
+                   loading="lazy">
+              <p class="qr-scan-text" data-i18n-key="ty-scan-crypto">📱 Scan with Binance or any crypto wallet</p>
+            </div>
+
+            <div class="payment-info-grid">
+              <div class="payment-info-row">
+                <span class="info-label" data-i18n-key="ty-network">Network</span>
+                <span class="info-value"><strong class="network-badge">TRC-20</strong></span>
+              </div>
+              <div class="payment-info-row">
+                <span class="info-label" data-i18n-key="ty-currency">Currency</span>
+                <span class="info-value"><strong>USDT</strong> (Tether)</span>
+              </div>
+              <div class="payment-info-row">
+                <span class="info-label" data-i18n-key="ty-wallet">Wallet Address</span>
+                <span class="info-value">
+                  <code id="binanceWallet" class="wallet-code">TXxxxxxxxxxxxxxxxxxxxxxxxxxxx</code>
+                  <button class="copy-btn" onclick="copyText('binanceWallet')" title="Copy">📋</button>
+                </span>
+              </div>
+              <div class="payment-info-row">
+                <span class="info-label" data-i18n-key="ty-amount-usd">Amount (USD)</span>
+                <span class="info-value info-amount">$74.98 USDT</span>
+              </div>
+              <div class="payment-info-row">
+                <span class="info-label" data-i18n-key="ty-memo">Memo / Note</span>
+                <span class="info-value">
+                  <code id="cryptoMemo">KMAC1042</code>
+                  <button class="copy-btn" onclick="copyText('cryptoMemo')" title="Copy">📋</button>
+                </span>
+              </div>
+            </div>
+
+            <div class="qr-warning">
+              ⚠️ <span data-i18n-key="ty-warning-crypto">Only send USDT via the TRC-20 network. Sending other tokens or using a different network may result in permanent loss.</span>
+            </div>
+          </div>
+
+          <!-- Footer Note -->
+          <div class="qr-footer-note">
+            <p>💡 <span data-i18n-key="ty-footer-note">After completing payment, your order will be automatically confirmed within 5-15 minutes. You will receive an email notification.</span></p>
+          </div>
+        </div>
+
+        <!-- Order Details -->
+        <div class="thankyou-order-details" style="margin-top:48px;">
+          <h2 data-i18n-key="ty-details-title">Order Details</h2>
+          <div class="order-details-grid">
+            <div class="order-detail-card">
+              <span class="detail-icon">📧</span>
+              <span class="detail-label" data-i18n-key="ty-email">Email</span>
+              <span class="detail-value">customer@example.com</span>
+            </div>
+            <div class="order-detail-card">
+              <span class="detail-icon">📦</span>
+              <span class="detail-label" data-i18n-key="ty-shipping">Shipping</span>
+              <span class="detail-value">Free Standard (3-5 days)</span>
+            </div>
+            <div class="order-detail-card">
+              <span class="detail-icon">💰</span>
+              <span class="detail-label" data-i18n-key="ty-total">Total</span>
+              <span class="detail-value" style="color:var(--blue); font-size:1.1rem;">$74.98</span>
+            </div>
+            <div class="order-detail-card">
+              <span class="detail-icon">📋</span>
+              <span class="detail-label" data-i18n-key="ty-status">Status</span>
+              <span class="detail-value" style="color:#F59E0B;">⏳ On Hold</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="footer-bottom">
+        <span>© 2026 KMAC Tech. All rights reserved.</span>
+        <div class="payment-icons"><span>Visa</span><span>MC</span><span>PayPal</span><span>VietQR</span><span>Binance</span></div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/main.js" defer></script>
+  <script>
+  /* ===== QR Demo — Tab Switcher + Copy + Timer ===== */
+
+  // Bilingual strings for the demo page
+  const TY_I18N = {
+    en: {
+      'ty-title': 'Thank you for your order!',
+      'ty-order': 'Order',
+      'ty-pending': 'Payment Pending',
+      'ty-pending-desc': 'Please complete payment within 30 minutes to confirm your order.',
+      'ty-tab-bank': 'Bank Transfer (VietQR)',
+      'ty-tab-crypto': 'Crypto (USDT)',
+      'ty-scan-bank': '📱 Scan with your banking app to pay instantly',
+      'ty-scan-crypto': '📱 Scan with Binance or any crypto wallet',
+      'ty-bank': 'Bank',
+      'ty-account-no': 'Account Number',
+      'ty-account-name': 'Account Name',
+      'ty-amount': 'Amount',
+      'ty-transfer-desc': 'Transfer Description',
+      'ty-warning-bank': 'Please include the transfer description exactly as shown. This helps us match your payment to your order automatically.',
+      'ty-network': 'Network',
+      'ty-currency': 'Currency',
+      'ty-wallet': 'Wallet Address',
+      'ty-amount-usd': 'Amount (USD)',
+      'ty-memo': 'Memo / Note',
+      'ty-warning-crypto': 'Only send USDT via the TRC-20 network. Sending other tokens or using a different network may result in permanent loss.',
+      'ty-footer-note': 'After completing payment, your order will be automatically confirmed within 5-15 minutes. You will receive an email notification.',
+      'ty-details-title': 'Order Details',
+      'ty-email': 'Email',
+      'ty-shipping': 'Shipping',
+      'ty-total': 'Total',
+      'ty-status': 'Status',
+    },
+    vn: {
+      'ty-title': 'Cảm ơn bạn đã đặt hàng!',
+      'ty-order': 'Đơn hàng',
+      'ty-pending': 'Đang chờ thanh toán',
+      'ty-pending-desc': 'Vui lòng hoàn tất thanh toán trong 30 phút để xác nhận đơn hàng.',
+      'ty-tab-bank': 'Chuyển khoản (VietQR)',
+      'ty-tab-crypto': 'Tiền mã hóa (USDT)',
+      'ty-scan-bank': '📱 Quét bằng app ngân hàng để thanh toán ngay',
+      'ty-scan-crypto': '📱 Quét bằng Binance hoặc ví crypto',
+      'ty-bank': 'Ngân hàng',
+      'ty-account-no': 'Số tài khoản',
+      'ty-account-name': 'Tên tài khoản',
+      'ty-amount': 'Số tiền',
+      'ty-transfer-desc': 'Nội dung chuyển khoản',
+      'ty-warning-bank': 'Vui lòng ghi đúng nội dung chuyển khoản. Điều này giúp chúng tôi tự động khớp thanh toán với đơn hàng.',
+      'ty-network': 'Mạng lưới',
+      'ty-currency': 'Loại tiền',
+      'ty-wallet': 'Địa chỉ ví',
+      'ty-amount-usd': 'Số tiền (USD)',
+      'ty-memo': 'Ghi chú',
+      'ty-warning-crypto': 'Chỉ gửi USDT qua mạng TRC-20. Gửi token khác hoặc sai mạng có thể mất vĩnh viễn.',
+      'ty-footer-note': 'Sau khi thanh toán, đơn hàng sẽ được xác nhận tự động trong 5-15 phút. Bạn sẽ nhận email thông báo.',
+      'ty-details-title': 'Chi tiết đơn hàng',
+      'ty-email': 'Email',
+      'ty-shipping': 'Vận chuyển',
+      'ty-total': 'Tổng cộng',
+      'ty-status': 'Trạng thái',
+    }
+  };
+
+  // Override switchLang to also update thank-you page text
+  const _origSwitchLang = typeof switchLang === 'function' ? switchLang : null;
+  window.switchLang = function(lang) {
+    if (_origSwitchLang) _origSwitchLang(lang);
+    else {
+      localStorage.setItem('kmac_lang', lang);
+      document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
+    }
+    // Apply thank-you translations
+    const dict = TY_I18N[lang] || TY_I18N.en;
+    document.querySelectorAll('[data-i18n-key]').forEach(el => {
+      const key = el.getAttribute('data-i18n-key');
+      if (dict[key]) el.textContent = dict[key];
+    });
+  };
+
+  // Tab switcher
+  window.switchQrTab = function(tabId) {
+    document.querySelectorAll('.qr-tab').forEach(tab => {
+      var isActive = tab.getAttribute('data-tab') === tabId;
+      tab.classList.toggle('active', isActive);
+      tab.setAttribute('aria-selected', isActive ? 'true' : 'false');
+    });
+    document.querySelectorAll('.qr-tab-content').forEach(panel => {
+      panel.classList.toggle('active', panel.id === 'tab-' + tabId);
+    });
+  };
+
+  // Copy to clipboard
+  window.copyText = function(elementId) {
+    var el = document.getElementById(elementId);
+    if (!el) return;
+    var text = el.textContent.trim();
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(() => showCopyFeedback(el));
+    } else {
+      var ta = document.createElement('textarea');
+      ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select(); document.execCommand('copy');
+      document.body.removeChild(ta); showCopyFeedback(el);
+    }
+  };
+  function showCopyFeedback(el) {
+    var btn = el.parentElement.querySelector('.copy-btn');
+    if (btn) {
+      var orig = btn.textContent;
+      btn.textContent = '✅'; btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = orig; btn.classList.remove('copied'); }, 1500);
+    }
+  }
+
+  // 30-minute countdown
+  document.addEventListener('DOMContentLoaded', () => {
+    const timerEl = document.getElementById('qrTimer');
+    if (!timerEl) return;
+    const orderKey = 'kmac_timer_demo_1042';
+    let endTime;
+    const saved = localStorage.getItem(orderKey);
+    if (saved) { endTime = parseInt(saved); }
+    else { endTime = Date.now() + (30 * 60 * 1000); localStorage.setItem(orderKey, endTime.toString()); }
+
+    setInterval(() => {
+      const remaining = Math.max(0, Math.floor((endTime - Date.now()) / 1000));
+      const mins = Math.floor(remaining / 60);
+      const secs = remaining % 60;
+      timerEl.textContent = (mins < 10 ? '0' : '') + mins + ':' + (secs < 10 ? '0' : '') + secs;
+      if (remaining <= 300) timerEl.classList.add('timer-urgent');
+      if (remaining <= 0) {
+        timerEl.textContent = localStorage.getItem('kmac_lang') === 'vn' ? 'Hết hạn' : 'Expired';
+        timerEl.classList.add('timer-expired');
+      }
+    }, 1000);
+
+    // Apply saved language on load
+    const lang = localStorage.getItem('kmac_lang') || 'en';
+    window.switchLang(lang);
+  });
+  </script>
+</body>
+</html>

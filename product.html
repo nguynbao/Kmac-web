@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Detail — KMAC Tech</title>
+  <meta name="description" content="View detailed product information, customer reviews, and purchase options for premium tech accessories at KMAC Tech.">
+  <meta property="og:type" content="product">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='80'>💻</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/pages.css">
+</head>
+<body>
+  <a href="#main-content" class="skip-nav">Skip to main content</a>
+
+  <header class="header" id="header" role="banner">
+    <div class="container flex-between">
+      <a href="index.html" class="logo" aria-label="KMAC Tech — Home">KMAC<span>Tech</span></a>
+      <nav class="nav-links" aria-label="Main navigation"><a href="index.html" data-i18n="nav.home">Home</a><a href="shop.html" class="active" data-i18n="nav.shop">Shop</a><a href="blog.html" data-i18n="nav.blog">Blog</a><a href="cart.html" data-i18n="nav.cart">Cart</a></nav>
+      <div class="header-actions">
+        <div class="lang-switcher" aria-label="Language Switcher">
+          <button class="lang-btn active" data-lang="en" onclick="switchLang('en')" aria-label="Switch to English">🇺🇸 EN</button>
+          <button class="lang-btn" data-lang="vn" onclick="switchLang('vn')" aria-label="Switch to Vietnamese">🇻🇳 VN</button>
+        </div>
+        <button class="btn-icon" data-search-toggle aria-label="Search products"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></button>
+        <a href="cart.html" class="btn-icon" aria-label="Shopping cart"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg><span class="cart-count" aria-label="Cart items">0</span></a>
+        <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle menu" aria-expanded="false"><span></span><span></span><span></span></button>
+      </div>
+    </div>
+  </header>
+  <div class="mobile-menu" id="mobileMenu" role="navigation" aria-label="Mobile navigation"><a href="index.html">🏠 Home</a><a href="shop.html">🛍️ Shop</a><a href="blog.html">📝 Blog</a><a href="cart.html">🛒 Cart</a></div>
+
+  <main id="main-content">
+    <div class="container">
+      <nav class="breadcrumb" aria-label="Breadcrumb"><a href="index.html">Home</a><span>›</span><a href="shop.html">Shop</a><span>›</span><span id="breadcrumbName">Product</span></nav>
+    </div>
+    <section class="product-detail" aria-label="Product details">
+      <div class="container">
+        <div class="product-layout" id="productLayout"></div>
+      </div>
+    </section>
+    <section class="reviews-section" aria-label="Customer reviews">
+      <div class="container">
+        <h2 class="section-title">Customer Reviews 💬</h2>
+        <div class="reviews-summary" id="reviewsSummary"></div>
+        <div id="reviewsList"></div>
+      </div>
+    </section>
+    <section class="related-products" aria-label="Related products">
+      <div class="container">
+        <h2 class="section-title">You Might Also Like ✨</h2>
+        <div class="grid grid-4" id="relatedGrid" style="margin-top:32px;"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand"><div class="logo">KMAC<span class="footer-logo-white">Tech</span></div><p>Premium tech accessories designed with love. 🇺🇸</p></div>
+        <div><h4>Shop</h4><div class="footer-links"><a href="shop.html">All Products</a><a href="shop.html?cat=cases">MacBook Cases</a><a href="shop.html?cat=gaming">Gaming Gear</a></div></div>
+        <div><h4>Help</h4><div class="footer-links"><a href="#">Contact Us</a><a href="#">Shipping</a><a href="#">Returns</a></div></div>
+        <div><h4>Follow</h4><div class="footer-links"><a href="#">Instagram</a><a href="#">TikTok</a><a href="#">Twitter</a></div></div>
+      </div>
+      <div class="footer-bottom"><span>© 2026 KMAC Tech.</span><div class="payment-icons"><span>Visa</span><span>MC</span><span>PayPal</span><span>Apple Pay</span></div></div>
+    </div>
+  </footer>
+
+  <script src="js/main.js" defer></script>
+  <script src="js/i18n.js" defer></script>
+  <script src="js/product.js" defer></script>
+</body>
+</html>
