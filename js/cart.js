@@ -12,7 +12,7 @@ function renderCart() {
       <div class="empty-icon">🛒</div>
       <h2>Your cart is empty</h2>
       <p>Looks like you haven't added anything yet. Let's fix that!</p>
-      <a href="shop.html" class="btn btn-primary">Continue Shopping →</a>
+      <a href="${pageUrl('shop.html')}" class="btn btn-primary">Continue Shopping →</a>
     </div>`;
     return;
   }
@@ -22,7 +22,7 @@ function renderCart() {
     if (!p) return '';
     return `<div class="cart-item">
       <div class="cart-item-img">
-        <picture><source srcset="${p.img}.webp" type="image/webp"><img src="${p.img}.png" alt="${p.name}" width="100" height="100"></picture>
+        <picture><source srcset="${assetUrl(p.img + '.webp')}" type="image/webp"><img src="${assetUrl(p.img + '.png')}" alt="${p.name}" width="100" height="100"></picture>
       </div>
       <div class="cart-item-info"><h3>${p.name}</h3><p>KMAC Tech</p></div>
       <div class="quantity-selector">
@@ -63,9 +63,9 @@ function renderCart() {
         <button class="btn btn-secondary btn-sm" onclick="applyCoupon()">Apply</button>
       </div>` : ''}
       <div class="summary-row total"><span>Total</span><span>$${total.toFixed(2)}</span></div>
-      <a href="checkout.html" class="btn btn-primary checkout-btn btn-lg">Proceed to Checkout →</a>
+      <a href="${pageUrl('checkout.html')}" class="btn btn-primary checkout-btn btn-lg">Proceed to Checkout →</a>
       <div style="text-align:center;margin-top:16px;">
-        <a href="shop.html" style="color:var(--text-sec);font-size:.85rem;">← Continue Shopping</a>
+        <a href="${pageUrl('shop.html')}" style="color:var(--text-sec);font-size:.85rem;">← Continue Shopping</a>
       </div>
     </div>
   </div>`;

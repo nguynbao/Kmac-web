@@ -25,7 +25,7 @@ function renderOrderSidebar() {
   const summaryEl = document.getElementById('orderSummary');
 
   if (!cart.length) {
-    itemsEl.innerHTML = '<p style="text-align:center;padding:24px;color:var(--text-sec);">Your cart is empty. <a href="shop.html" style="color:var(--blue-text)">Shop now →</a></p>';
+    itemsEl.innerHTML = `<p style="text-align:center;padding:24px;color:var(--text-sec);">Your cart is empty. <a href="${pageUrl('shop.html')}" style="color:var(--blue-text)">Shop now →</a></p>`;
     summaryEl.innerHTML = '';
     return;
   }
@@ -35,7 +35,7 @@ function renderOrderSidebar() {
       const p = PRODUCTS.find(pr => pr.id === item.id);
       if (!p) return '';
       return `<div class="order-item">
-        <div class="order-item-img"><picture><source srcset="${p.img}.webp" type="image/webp"><img src="${p.img}.png" alt="${p.name}" width="56" height="56"></picture></div>
+        <div class="order-item-img"><picture><source srcset="${assetUrl(p.img + '.webp')}" type="image/webp"><img src="${assetUrl(p.img + '.png')}" alt="${p.name}" width="56" height="56"></picture></div>
         <div style="flex:1"><div style="font-weight:600;font-size:.85rem;">${p.name}</div><div style="color:var(--text-sec);font-size:.8rem;">Qty: ${item.qty}</div></div>
         <div style="font-weight:700;font-size:.9rem;">$${(p.price * item.qty).toFixed(2)}</div>
       </div>`;
@@ -99,6 +99,6 @@ function placeOrder() {
       <p style="color:var(--text-sec);font-size:1.05rem;margin-bottom:8px;">Thank you for shopping with KMAC Tech, ${firstName}!</p>
       <p style="color:var(--text-sec);margin-bottom:8px;">A confirmation email has been sent to <strong>${email}</strong></p>
       <p style="color:var(--text-sec);margin-bottom:32px;">Order total: <strong>$${(total + shippingCost).toFixed(2)}</strong></p>
-      <a href="shop.html" class="btn btn-primary btn-lg">Continue Shopping →</a>
+      <a href="${pageUrl('shop.html')}" class="btn btn-primary btn-lg">Continue Shopping →</a>
     </div>`;
 }

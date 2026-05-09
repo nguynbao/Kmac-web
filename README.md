@@ -23,13 +23,14 @@ KMAC Tech là dự án website thương mại điện tử cho phụ kiện MacB
 ```text
 .
 ├── index.html                 # Trang chủ bản tĩnh
-├── shop.html                  # Danh sách sản phẩm
-├── product.html               # Chi tiết sản phẩm
-├── cart.html                  # Giỏ hàng
-├── checkout.html              # Checkout demo
-├── blog.html                  # Blog
-├── 404.html                   # Trang lỗi
-├── thankyou-demo.html         # Trang cảm ơn demo
+├── pages/
+│   ├── shop.html              # Danh sách sản phẩm
+│   ├── product.html           # Chi tiết sản phẩm
+│   ├── cart.html              # Giỏ hàng
+│   ├── checkout.html          # Checkout demo
+│   ├── blog.html              # Blog
+│   ├── 404.html               # Trang lỗi
+│   └── thankyou-demo.html     # Trang cảm ơn demo
 ├── css/
 │   ├── styles.css             # Design system và layout chính
 │   └── pages.css              # Style theo từng trang
@@ -180,7 +181,7 @@ Các file quan trọng:
 
 ## Kiểm tra nhanh sau khi sửa
 
-- Mở `index.html`, `shop.html`, `product.html?id=1`, `cart.html`, `checkout.html`, `blog.html`.
+- Mở `index.html`, `pages/shop.html`, `pages/product.html?id=1`, `pages/cart.html`, `pages/checkout.html`, `pages/blog.html`.
 - Thử đổi ngôn ngữ EN/VN.
 - Thêm sản phẩm vào giỏ và kiểm tra cart count.
 - Áp dụng coupon `KMAC10` hoặc `WELCOME5`.

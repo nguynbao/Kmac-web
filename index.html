@@ -56,7 +56,7 @@
     "url": "https://kmactech.com",
     "potentialAction": {
       "@type": "SearchAction",
-      "target": "https://kmactech.com/shop.html?q={search_term_string}",
+      "target": "https://kmactech.com/pages/shop.html?q={search_term_string}",
       "query-input": "required name=search_term_string"
     }
   }
@@ -72,9 +72,9 @@
       <a href="index.html" class="logo" aria-label="KMAC Tech — Home">KMAC<span>Tech</span></a>
       <nav class="nav-links" id="navLinks" aria-label="Main navigation">
         <a href="index.html" class="active" data-i18n="nav.home">Home</a>
-        <a href="shop.html" data-i18n="nav.shop">Shop</a>
-        <a href="blog.html" data-i18n="nav.blog">Blog</a>
-        <a href="cart.html" data-i18n="nav.cart">Cart</a>
+        <a href="pages/shop.html" data-i18n="nav.shop">Shop</a>
+        <a href="pages/blog.html" data-i18n="nav.blog">Blog</a>
+        <a href="pages/cart.html" data-i18n="nav.cart">Cart</a>
       </nav>
       <div class="header-actions">
         <!-- Language Switcher -->
@@ -85,7 +85,7 @@
         <button class="btn-icon" data-search-toggle aria-label="Search products">
           <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
         </button>
-        <a href="cart.html" class="btn-icon" aria-label="Shopping cart">
+        <a href="pages/cart.html" class="btn-icon" aria-label="Shopping cart">
           <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
           <span class="cart-count" aria-label="Cart items">0</span>
         </a>
@@ -97,9 +97,9 @@
   </header>
   <div class="mobile-menu" id="mobileMenu" role="navigation" aria-label="Mobile navigation">
     <a href="index.html">🏠 Home</a>
-    <a href="shop.html">🛍️ Shop</a>
-    <a href="blog.html">📝 Blog</a>
-    <a href="cart.html">🛒 Cart</a>
+    <a href="pages/shop.html">🛍️ Shop</a>
+    <a href="pages/blog.html">📝 Blog</a>
+    <a href="pages/cart.html">🛒 Cart</a>
   </div>
 
   <main id="main-content">
@@ -110,7 +110,7 @@
           <h1><span data-i18n="hero.title.1">Premium Accessories for Your</span> <span class="highlight" data-i18n="hero.title.2">Everyday Tech</span> ✨</h1>
           <p data-i18n="hero.desc">Discover cute, durable, and stylish accessories designed for MacBook lovers and gaming enthusiasts. Made with care, shipped free across the US.</p>
           <div class="hero-actions">
-            <a href="shop.html" class="btn btn-primary btn-lg" id="heroShopNow" data-i18n="hero.cta">Shop Now →</a>
+            <a href="pages/shop.html" class="btn btn-primary btn-lg" id="heroShopNow" data-i18n="hero.cta">Shop Now →</a>
             <a href="#collections" class="btn btn-secondary btn-lg" data-i18n="hero.browse">Browse Collections</a>
           </div>
         </div>
@@ -139,22 +139,22 @@
         <h2 class="section-title fade-in" data-i18n="cat.title">Shop by Category</h2>
         <p class="section-subtitle fade-in" data-i18n="cat.subtitle">Find the perfect accessory for your setup 🎯</p>
         <div class="grid fade-in" style="grid-template-columns: repeat(4,1fr);">
-          <a href="shop.html?cat=cases" class="collection-card" id="catCases">
+          <a href="pages/shop.html?cat=cases" class="collection-card" id="catCases">
             <div class="icon" aria-hidden="true">💻</div>
             <h3 data-i18n="cat.cases">MacBook Cases</h3>
             <p data-i18n="cat.cases.desc">Hard shell & soft covers</p>
           </a>
-          <a href="shop.html?cat=sleeves" class="collection-card" id="catSleeves">
+          <a href="pages/shop.html?cat=sleeves" class="collection-card" id="catSleeves">
             <div class="icon" aria-hidden="true">👜</div>
             <h3 data-i18n="cat.sleeves">Sleeves & Bags</h3>
             <p data-i18n="cat.sleeves.desc">Carry in style</p>
           </a>
-          <a href="shop.html?cat=gaming" class="collection-card" id="catGaming">
+          <a href="pages/shop.html?cat=gaming" class="collection-card" id="catGaming">
             <div class="icon" aria-hidden="true">🎮</div>
             <h3 data-i18n="cat.gaming">Gaming Gear</h3>
             <p data-i18n="cat.gaming.desc">Mousepads, stands & more</p>
           </a>
-          <a href="shop.html?cat=chargers" class="collection-card" id="catChargers">
+          <a href="pages/shop.html?cat=chargers" class="collection-card" id="catChargers">
             <div class="icon" aria-hidden="true">🔌</div>
             <h3 data-i18n="cat.chargers">Chargers & Cables</h3>
             <p data-i18n="cat.chargers.desc">Fast charge, always ready</p>
@@ -172,7 +172,7 @@
           <!-- Rendered by JS for WebP support -->
         </div>
         <div class="section-center fade-in">
-          <a href="shop.html" class="btn btn-primary" id="viewAllProducts" data-i18n="best.viewall">View All Products →</a>
+          <a href="pages/shop.html" class="btn btn-primary" id="viewAllProducts" data-i18n="best.viewall">View All Products →</a>
         </div>
       </div>
     </section>
@@ -181,7 +181,7 @@
     <section class="brand-strip fade-in" aria-label="Why choose KMAC Tech">
       <h2 data-i18n="brand.title">Why Choose KMAC Tech? 💙</h2>
       <p data-i18n="brand.desc">We believe your tech deserves accessories that are as unique as you. Every product is designed with love, tested for quality, and backed by our happiness guarantee.</p>
-      <a href="shop.html" class="btn btn-lg btn-white" data-i18n="brand.cta">Start Shopping</a>
+      <a href="pages/shop.html" class="btn btn-lg btn-white" data-i18n="brand.cta">Start Shopping</a>
     </section>
 
     <!-- Newsletter -->
@@ -209,10 +209,10 @@
         <div>
           <h4>Shop</h4>
           <div class="footer-links">
-            <a href="shop.html">All Products</a>
-            <a href="shop.html?cat=cases">MacBook Cases</a>
-            <a href="shop.html?cat=sleeves">Sleeves & Bags</a>
-            <a href="shop.html?cat=gaming">Gaming Gear</a>
+            <a href="pages/shop.html">All Products</a>
+            <a href="pages/shop.html?cat=cases">MacBook Cases</a>
+            <a href="pages/shop.html?cat=sleeves">Sleeves & Bags</a>
+            <a href="pages/shop.html?cat=gaming">Gaming Gear</a>
           </div>
         </div>
         <div>

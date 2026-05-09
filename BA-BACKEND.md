@@ -19,13 +19,13 @@ KMAC Tech la website thuong mai dien tu ban phu kien cong nghe, tap trung vao Ma
 Frontend hien co cac trang:
 
 - `index.html`: trang chu, hero, danh muc, san pham ban chay, newsletter.
-- `shop.html`: danh sach san pham, loc theo danh muc/gia/rating, sap xep, quick view.
-- `product.html`: chi tiet san pham, review, san pham lien quan.
-- `cart.html`: gio hang, tang/giam so luong, xoa san pham, coupon, upsell.
-- `checkout.html`: thong tin lien he, dia chi giao hang, chon shipping, chon payment, dat hang demo.
-- `blog.html`: blog, bai viet noi bat, danh sach bai viet.
-- `404.html`: trang loi.
-- `thankyou-demo.html`: trang cam on demo.
+- `pages/shop.html`: danh sach san pham, loc theo danh muc/gia/rating, sap xep, quick view.
+- `pages/product.html`: chi tiet san pham, review, san pham lien quan.
+- `pages/cart.html`: gio hang, tang/giam so luong, xoa san pham, coupon, upsell.
+- `pages/checkout.html`: thong tin lien he, dia chi giao hang, chon shipping, chon payment, dat hang demo.
+- `pages/blog.html`: blog, bai viet noi bat, danh sach bai viet.
+- `pages/404.html`: trang loi.
+- `pages/thankyou-demo.html`: trang cam on demo.
 
 Hien tai du lieu san pham va gio hang dang nam o frontend:
 

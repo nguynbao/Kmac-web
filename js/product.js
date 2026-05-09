@@ -57,14 +57,14 @@ document.addEventListener('DOMContentLoaded', () => {
     <div class="gallery">
       <div class="gallery-main">
         <picture>
-          <source srcset="${product.img}.webp" type="image/webp">
-          <img src="${product.img}.png" alt="${product.name}" id="mainImg" width="600" height="600">
+          <source srcset="${assetUrl(product.img + '.webp')}" type="image/webp">
+          <img src="${assetUrl(product.img + '.png')}" alt="${product.name}" id="mainImg" width="600" height="600">
         </picture>
       </div>
       <div class="gallery-thumbs">
-        <button class="active" onclick="selectThumb(this,'${product.img}')" aria-label="View image 1"><picture><source srcset="${product.img}.webp" type="image/webp"><img src="${product.img}.png" alt="View 1" width="72" height="72"></picture></button>
-        <button onclick="selectThumb(this,'${product.img}')" aria-label="View image 2"><picture><source srcset="${product.img}.webp" type="image/webp"><img src="${product.img}.png" alt="View 2" width="72" height="72"></picture></button>
-        <button onclick="selectThumb(this,'${product.img}')" aria-label="View image 3"><picture><source srcset="${product.img}.webp" type="image/webp"><img src="${product.img}.png" alt="View 3" width="72" height="72"></picture></button>
+        <button class="active" onclick="selectThumb(this,'${product.img}')" aria-label="View image 1"><picture><source srcset="${assetUrl(product.img + '.webp')}" type="image/webp"><img src="${assetUrl(product.img + '.png')}" alt="View 1" width="72" height="72"></picture></button>
+        <button onclick="selectThumb(this,'${product.img}')" aria-label="View image 2"><picture><source srcset="${assetUrl(product.img + '.webp')}" type="image/webp"><img src="${assetUrl(product.img + '.png')}" alt="View 2" width="72" height="72"></picture></button>
+        <button onclick="selectThumb(this,'${product.img}')" aria-label="View image 3"><picture><source srcset="${assetUrl(product.img + '.webp')}" type="image/webp"><img src="${assetUrl(product.img + '.png')}" alt="View 3" width="72" height="72"></picture></button>
       </div>
     </div>
     <div class="product-info-detail">
@@ -150,8 +150,8 @@ function selectThumb(btn, basePath) {
   btn.classList.add('active');
   const mainPicture = document.querySelector('.gallery-main picture');
   if (mainPicture) {
-    mainPicture.querySelector('source').srcset = basePath + '.webp';
-    mainPicture.querySelector('img').src = basePath + '.png';
+    mainPicture.querySelector('source').srcset = assetUrl(basePath + '.webp');
+    mainPicture.querySelector('img').src = assetUrl(basePath + '.png');
   }
 }
 function selectColor(btn, name) {

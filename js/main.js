@@ -13,6 +13,17 @@ const PRODUCTS = [
   { id:8, name:'Laptop Stand — Aluminum Adjustable', price:39.99, oldPrice:null, img:'assets/product-keyboard', category:'gaming', badge:'new', rating:4, reviews:58, colors:['Silver','Black'], sizes:[] },
 ];
 
+// ===== Path Helpers =====
+// The home page lives at root while inner pages live in /pages.
+const IS_PAGES_PAGE = window.location.pathname.includes('/pages/');
+function pageUrl(path) {
+  return IS_PAGES_PAGE ? path : 'pages/' + path;
+}
+function assetUrl(path) {
+  if (/^(https?:|data:|\/)/.test(path)) return path;
+  return IS_PAGES_PAGE ? '../' + path : path;
+}
+
 // ===== Shared Color Hex Map (deduplicated from product.js + shop.js) =====
 const COLOR_HEX_MAP = {
   'Clear':'#E0E7FF','Blue':'#0A84FF','Pink':'#FF6B9D','Gray':'#9CA3AF',
@@ -26,13 +37,13 @@ function getColorHex(name) { return COLOR_HEX_MAP[name] || '#CBD5E1'; }
 // ===== Image Helper — WebP with PNG fallback =====
 function imgSrc(basePath) {
   // basePath = 'assets/product-keyboard' (no extension)
-  return basePath + '.webp';
+  return assetUrl(basePath + '.webp');
 }
 function imgPicture(basePath, alt, cls = '', lazy = true) {
   const loadAttr = lazy ? 'loading="lazy"' : '';
   return `<picture>
-    <source srcset="${basePath}.webp" type="image/webp">
-    <img src="${basePath}.png" alt="${alt}" ${cls ? 'class="' + cls + '"' : ''} ${loadAttr} width="400" height="400">
+    <source srcset="${assetUrl(basePath + '.webp')}" type="image/webp">
+    <img src="${assetUrl(basePath + '.png')}" alt="${alt}" ${cls ? 'class="' + cls + '"' : ''} ${loadAttr} width="400" height="400">
   </picture>`;
 }
 
@@ -186,7 +197,7 @@ function initSearch() {
         results.innerHTML = '<div style="padding:24px;text-align:center;color:var(--text-sec)">No products found 😅</div>';
       } else {
         results.innerHTML = matches.map(p => `
-          <a href="product.html?id=${p.id}" class="search-result-item">
+          <a href="${pageUrl(`product.html?id=${p.id}`)}" class="search-result-item">
             <img src="${imgSrc(p.img)}" alt="${p.name}" width="48" height="48">
             <div class="result-info">
               <div class="result-name">${p.name}</div>
@@ -246,12 +257,12 @@ function renderProductCard(p) {
     ? `$${p.price.toFixed(2)} <span class="old-price">$${p.oldPrice.toFixed(2)}</span>`
     : `$${p.price.toFixed(2)}`;
 
-  return `<a href="product.html?id=${p.id}" class="product-card">
+  return `<a href="${pageUrl(`product.html?id=${p.id}`)}" class="product-card">
     <div class="product-img">
       ${badgeHTML ? '<div class="product-badges">' + badgeHTML + '</div>' : ''}
       <picture>
-        <source srcset="${p.img}.webp" type="image/webp">
-        <img src="${p.img}.png" alt="${p.name}" loading="lazy" width="400" height="400">
+        <source srcset="${assetUrl(p.img + '.webp')}" type="image/webp">
+        <img src="${assetUrl(p.img + '.png')}" alt="${p.name}" loading="lazy" width="400" height="400">
       </picture>
     </div>
     <div class="product-info">

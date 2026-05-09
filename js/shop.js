@@ -53,7 +53,7 @@ function openQuickView(productId) {
   const modal = document.getElementById('quickViewModal');
   document.getElementById('quickViewContent').innerHTML = `
     <div style="background:var(--blue-light);border-radius:var(--radius);display:flex;align-items:center;justify-content:center;padding:24px;aspect-ratio:1;">
-      <picture><source srcset="${p.img}.webp" type="image/webp"><img src="${p.img}.png" alt="${p.name}" width="400" height="400" style="width:85%;height:85%;object-fit:contain;"></picture>
+      <picture><source srcset="${assetUrl(p.img + '.webp')}" type="image/webp"><img src="${assetUrl(p.img + '.png')}" alt="${p.name}" width="400" height="400" style="width:85%;height:85%;object-fit:contain;"></picture>
     </div>
     <div>
       <h2 style="font-size:1.3rem;margin-bottom:8px;">${p.name}</h2>
@@ -61,7 +61,7 @@ function openQuickView(productId) {
       <div style="font-size:1.4rem;font-weight:800;color:var(--blue-text);margin-bottom:16px;">$${p.price.toFixed(2)}${p.oldPrice ? ' <span class="old-price">$' + p.oldPrice.toFixed(2) + '</span>' : ''}</div>
       ${p.colors.length ? '<div style="margin-bottom:16px;"><label style="font-weight:600;font-size:.85rem;display:block;margin-bottom:8px;">Color</label><div class="color-swatches">' + p.colors.map((c, i) => `<button class="color-swatch${i === 0 ? ' active' : ''}" style="background:${getColorHex(c)}" title="${c}" aria-label="Color: ${c}" onclick="this.parentElement.querySelectorAll('.color-swatch').forEach(s=>s.classList.remove('active'));this.classList.add('active')"></button>`).join('') + '</div></div>' : ''}
       <button class="btn btn-primary" style="width:100%;" onclick="addToCart(${p.id});closeQuickView();">Add to Cart</button>
-      <a href="product.html?id=${p.id}" class="btn btn-outline" style="width:100%;margin-top:8px;">View Full Details →</a>
+      <a href="${pageUrl(`product.html?id=${p.id}`)}" class="btn btn-outline" style="width:100%;margin-top:8px;">View Full Details →</a>
     </div>`;
   modal.classList.add('open');
 }
