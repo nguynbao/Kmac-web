@@ -1,8 +1,9 @@
 /* ===== KMAC Tech — Main JS v2.0 ===== */
 /* Q1 Upgrade: Search, coupon fix, deduplicated utilities, a11y */
 
-// ===== Product Data Store =====
+// ===== Global Data Store =====
 let PRODUCTS = [];
+let CATEGORIES = [];
 
 // ===== Path Helpers =====
 // The home page lives at root while inner pages live in /pages.
@@ -27,11 +28,14 @@ function getColorHex(name) { return COLOR_HEX_MAP[name] || '#CBD5E1'; }
 
 // ===== Image Helper — WebP with PNG fallback =====
 function imgSrc(basePath) {
-  // basePath = 'assets/product-keyboard' (no extension)
+  if (/^(https?:|data:|\/)/.test(basePath)) return basePath;
   return assetUrl(basePath + '.webp');
 }
 function imgPicture(basePath, alt, cls = '', lazy = true) {
   const loadAttr = lazy ? 'loading="lazy"' : '';
+  if (/^(https?:|data:|\/)/.test(basePath)) {
+    return `<img src="${basePath}" alt="${alt}" ${cls ? 'class="' + cls + '"' : ''} ${loadAttr} width="400" height="400">`;
+  }
   return `<picture>
     <source srcset="${assetUrl(basePath + '.webp')}" type="image/webp">
     <img src="${assetUrl(basePath + '.png')}" alt="${alt}" ${cls ? 'class="' + cls + '"' : ''} ${loadAttr} width="400" height="400">
@@ -229,6 +233,14 @@ function initScrollAnimations() {
 document.addEventListener('DOMContentLoaded', async () => {
   // 1. Map API data from server (fallback to mock data if error/empty)
   try {
+    if (typeof categoryApi !== 'undefined') {
+      const resCat = await categoryApi.getCategories();
+      const serverCategories = resCat.data || resCat;
+      if (serverCategories && Array.isArray(serverCategories)) {
+        CATEGORIES = serverCategories;
+      }
+    }
+
     if (typeof productApi !== 'undefined') {
       const res = await productApi.getProducts();
       // Backend KMAC trả về format { success: true, data: [...] }
@@ -238,10 +250,12 @@ document.addEventListener('DOMContentLoaded', async () => {
           ...p,
           // Ánh xạ các trường từ API về chuẩn Frontend cũ nếu khác tên
           id: p._id || p.id,
-          name: p.name,
-          price: p.price || p.regularPrice,
+          name: typeof p.name === 'object' ? (p.name.vn || p.name.en || '') : (p.name || ''),
+          price: p.price || p.regularPrice || p.salePrice || 0,
           oldPrice: p.oldPrice || null,
-          img: p.images && p.images.length > 0 ? p.images[0] : 'assets/product-macbook-case',
+          img: p.images && p.images.length > 0 && p.images[0].url ? p.images[0].url : 'assets/product-macbook-case',
+          // Backend trả về categoryId là object hoặc string, ánh xạ sang slug để filter
+          category: p.categoryId && p.categoryId.slug ? p.categoryId.slug : p.categoryId || 'cases',
           colors: p.colors || [],
           sizes: p.sizes || []
         }));
@@ -279,10 +293,7 @@ function renderProductCard(p) {
   return `<a href="${pageUrl(`product.html?id=${p.id}`)}" class="product-card">
     <div class="product-img">
       ${badgeHTML ? '<div class="product-badges">' + badgeHTML + '</div>' : ''}
-      <picture>
-        <source srcset="${assetUrl(p.img + '.webp')}" type="image/webp">
-        <img src="${assetUrl(p.img + '.png')}" alt="${p.name}" loading="lazy" width="400" height="400">
-      </picture>
+      ${imgPicture(p.img, p.name)}
     </div>
     <div class="product-info">
       <div class="product-rating"><span class="stars">${renderStars(p.rating)}</span> (${p.reviews})</div>
