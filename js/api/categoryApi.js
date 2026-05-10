@@ -2,8 +2,8 @@
 
 const categoryApi = {
   // Lấy danh sách danh mục
-  async getCategories() {
-    return fetchAPI(`/categories`);
+  async getCategories(options = {}) {
+    return fetchAPI(`/categories`, options);
   },
 
   // Lấy chi tiết 1 danh mục theo slug hoặc ID
