@@ -1,7 +1,14 @@
 /* ===== Cart Page JS v2.0 ===== */
 /* FIXED: Coupon now actually applies discount to totals */
 
-document.addEventListener('DOMContentLoaded', renderCart);
+document.addEventListener('DOMContentLoaded', () => {
+  // Chờ data load xong mới render cart
+  if (typeof PRODUCTS !== 'undefined' && PRODUCTS.length > 0) {
+    renderCart();
+  } else {
+    window.addEventListener('KmacDataLoaded', renderCart);
+  }
+});
 
 function renderCart() {
   const cart = getCart();
@@ -10,28 +17,29 @@ function renderCart() {
   if (!cart.length) {
     container.innerHTML = `<div class="empty-cart">
       <div class="empty-icon">🛒</div>
-      <h2>Your cart is empty</h2>
-      <p>Looks like you haven't added anything yet. Let's fix that!</p>
-      <a href="${pageUrl('shop.html')}" class="btn btn-primary">Continue Shopping →</a>
+      <h2>Giỏ hàng trống</h2>
+      <p>Chưa có sản phẩm nào trong giỏ hàng. Hãy chọn thêm nhé!</p>
+      <a href="${pageUrl('shop.html')}" class="btn btn-primary">Tiếp tục mua sắm →</a>
     </div>`;
     return;
   }
 
   const items = cart.map(item => {
-    const p = PRODUCTS.find(pr => pr.id === item.id);
+    const p = PRODUCTS.find(pr => String(pr.id) === String(item.id));
     if (!p) return '';
+    const imgHtml = /^https?:/.test(p.img)
+      ? `<img src="${p.img}" alt="${p.name}" width="100" height="100" style="object-fit:contain;width:100%;height:100%;">`
+      : `<picture><source srcset="${assetUrl(p.img + '.webp')}" type="image/webp"><img src="${assetUrl(p.img + '.png')}" alt="${p.name}" width="100" height="100"></picture>`;
     return `<div class="cart-item">
-      <div class="cart-item-img">
-        <picture><source srcset="${assetUrl(p.img + '.webp')}" type="image/webp"><img src="${assetUrl(p.img + '.png')}" alt="${p.name}" width="100" height="100"></picture>
-      </div>
+      <div class="cart-item-img">${imgHtml}</div>
       <div class="cart-item-info"><h3>${p.name}</h3><p>KMAC Tech</p></div>
       <div class="quantity-selector">
-        <button onclick="updateCartQty(${p.id},${item.qty - 1});renderCart()" aria-label="Decrease">−</button>
-        <input type="number" value="${item.qty}" min="1" max="10" aria-label="Quantity" onchange="updateCartQty(${p.id},parseInt(this.value));renderCart()">
-        <button onclick="updateCartQty(${p.id},${item.qty + 1});renderCart()" aria-label="Increase">+</button>
+        <button onclick="updateCartQty('${p.id}',${item.qty - 1});renderCart()" aria-label="Decrease">−</button>
+        <input type="number" value="${item.qty}" min="1" max="${p.stockQuantity || 99}" aria-label="Quantity" onchange="updateCartQty('${p.id}',parseInt(this.value));renderCart()">
+        <button onclick="updateCartQty('${p.id}',${item.qty + 1});renderCart()" aria-label="Increase">+</button>
       </div>
-      <div class="cart-item-price">$${(p.price * item.qty).toFixed(2)}</div>
-      <button class="cart-item-remove" onclick="removeFromCart(${p.id});renderCart()" aria-label="Remove ${p.name}">✕</button>
+      <div class="cart-item-price">${Number(p.price * item.qty).toLocaleString('vi-VN')}₫</div>
+      <button class="cart-item-remove" onclick="removeFromCart('${p.id}');renderCart()" aria-label="Remove ${p.name}">✕</button>
     </div>`;
   }).join('');
 
@@ -39,8 +47,8 @@ function renderCart() {
   const { subtotal, discount, total, coupon } = getDiscountedTotal();
 
   // Upsell: suggest products not in cart
-  const cartIds = cart.map(i => i.id);
-  const upsells = PRODUCTS.filter(p => !cartIds.includes(p.id)).slice(0, 3);
+  const cartIds = cart.map(i => String(i.id));
+  const upsells = PRODUCTS.filter(p => !cartIds.includes(String(p.id))).slice(0, 3);
 
   const couponDisplay = coupon
     ? `<div class="discount-applied">🎉 ${coupon.code} — ${coupon.label} applied <button onclick="removeCoupon();renderCart()" style="margin-left:auto;background:none;border:none;cursor:pointer;font-size:.9rem;" aria-label="Remove coupon">✕</button></div>`

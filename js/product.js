@@ -1,163 +1,260 @@
 /* ===== Product Detail JS v2.0 ===== */
-/* Uses shared getColorHex() from main.js, WebP images via <picture> */
+/* Map API: getProductById + getProductReviews + getRelatedProducts */
 
-const SAMPLE_REVIEWS = [
-  { name: 'Sarah M.', date: 'Apr 28, 2026', rating: 5, text: 'Absolutely love this! The quality is amazing and it fits my MacBook perfectly. The color is even more beautiful in person. Highly recommend! 💙', verified: true },
-  { name: 'James K.', date: 'Apr 15, 2026', rating: 5, text: 'Great build quality and the packaging was really cute. Shipped fast and arrived in perfect condition. Will definitely buy more from KMAC Tech.', verified: true },
-  { name: 'Emily R.', date: 'Mar 30, 2026', rating: 4, text: 'Really nice product, looks exactly like the photos. Only giving 4 stars because I wish there were more color options. Otherwise perfect!', verified: true },
-  { name: 'Mike T.', date: 'Mar 12, 2026', rating: 5, text: 'This is my third purchase from KMAC Tech and they never disappoint. Premium quality at a fair price. The customer service is also top-notch!', verified: true },
-];
-
-document.addEventListener('DOMContentLoaded', () => {
+window.addEventListener('KmacDataLoaded', async () => {
   const params = new URLSearchParams(window.location.search);
-  const productId = parseInt(params.get('id')) || 1;
-  const product = PRODUCTS.find(p => p.id === productId) || PRODUCTS[0];
+  const productId = params.get('id');
 
-  // Dynamic SEO
+  let product = null;
+  let reviews = [];
+  let related = [];
+
+  // ===== 1. Fetch product từ API theo ID/slug =====
+  try {
+    if (productId && typeof productApi !== 'undefined') {
+      const res = await productApi.getProductById(productId);
+      if (res && (res.data || res._id)) {
+        const raw = res.data || res;
+        product = mapProduct(raw);
+      }
+    }
+  } catch (err) {
+    console.warn('[ProductDetail] Không fetch được từ API, thử lấy từ danh sách PRODUCTS:', err);
+  }
+
+  // Fallback: lấy từ mảng PRODUCTS đã load sẵn
+  if (!product && PRODUCTS.length > 0) {
+    product = PRODUCTS.find(p => String(p.id) === String(productId)) || PRODUCTS[0];
+  }
+
+  if (!product) {
+    document.getElementById('productLayout').innerHTML = '<p style="padding:40px;text-align:center;color:var(--text-sec)">Không tìm thấy sản phẩm.</p>';
+    return;
+  }
+
+  // ===== 2. Fetch reviews từ API =====
+  try {
+    if (typeof productApi !== 'undefined') {
+      const resR = await productApi.getReviews(productId || product.id);
+      const raw = resR.data || resR;
+      if (Array.isArray(raw)) reviews = raw;
+    }
+  } catch (err) {
+    console.warn('[ProductDetail] Không lấy được reviews:', err);
+  }
+
+  // ===== 3. Fetch related products từ API =====
+  try {
+    if (typeof productApi !== 'undefined') {
+      const resRel = await productApi.getRelated(productId || product.id);
+      const raw = resRel.data || resRel;
+      if (Array.isArray(raw)) related = raw.map(mapProduct);
+    }
+  } catch (err) {
+    // Fallback từ PRODUCTS
+    related = PRODUCTS.filter(p => String(p.id) !== String(product.id)).slice(0, 4);
+  }
+
+  // ===== Render tất cả =====
+  renderDetail(product, reviews, related);
+});
+
+// ===== Ánh xạ dữ liệu từ API về chuẩn Frontend =====
+function mapProduct(p) {
+  return {
+    ...p,
+    id: p._id || p.id,
+    name: typeof p.name === 'object' ? (p.name.vn || p.name.en || '') : (p.name || ''),
+    description: typeof p.description === 'object' ? (p.description.vn || p.description.en || '') : (p.description || ''),
+    price: p.price || p.regularPrice || p.salePrice || 0,
+    oldPrice: p.oldPrice || null,
+    img: p.images && p.images.length > 0 && p.images[0].url ? p.images[0].url : null,
+    images: p.images || [],
+    rating: p.ratingAverage || p.rating || 0,
+    reviews: p.reviewCount || p.reviews || 0,
+    badge: p.badge || null,
+    colors: p.colors || [],
+    sizes: p.sizes || [],
+    slug: p.slug || '',
+    stockQuantity: p.stockQuantity ?? null,
+    category: p.categoryId?.slug || p.categoryId || p.category || '',
+  };
+}
+
+// ===== Render chi tiết sản phẩm =====
+function renderDetail(product, reviews, related) {
+  const rating = product.rating || 0;
+  const reviewCount = product.reviews || 0;
+
+  // --- SEO ---
   document.title = `${product.name} — KMAC Tech`;
-  document.getElementById('breadcrumbName').textContent = product.name;
+  if (document.getElementById('breadcrumbName')) {
+    document.getElementById('breadcrumbName').textContent = product.name;
+  }
 
-  // Inject JSON-LD Product schema
+  // Schema.org
   const schema = document.createElement('script');
   schema.type = 'application/ld+json';
   schema.textContent = JSON.stringify({
     "@context": "https://schema.org",
     "@type": "Product",
     "name": product.name,
-    "image": `https://kmactech.com/${product.img}.webp`,
-    "description": "Premium quality accessory designed for your everyday tech. Made with durable, eco-friendly materials.",
+    "image": product.img || '',
+    "description": product.description || "Premium accessory from KMAC Tech.",
     "brand": { "@type": "Brand", "name": "KMAC Tech" },
     "offers": {
       "@type": "Offer",
-      "price": product.price.toFixed(2),
-      "priceCurrency": "USD",
-      "availability": "https://schema.org/InStock",
-      "seller": { "@type": "Organization", "name": "KMAC Tech" }
+      "price": Number(product.price).toFixed(2),
+      "priceCurrency": "VND",
+      "availability": product.stockQuantity !== 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
     },
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": product.rating.toString(),
-      "reviewCount": product.reviews.toString()
-    }
+    ...(rating > 0 && { "aggregateRating": { "@type": "AggregateRating", "ratingValue": rating.toString(), "reviewCount": reviewCount.toString() } })
   });
   document.head.appendChild(schema);
 
-  // Update OG tags dynamically
+  // OG tags
   const setMeta = (prop, content) => {
     let tag = document.querySelector(`meta[property="${prop}"]`) || document.querySelector(`meta[name="${prop}"]`);
     if (!tag) { tag = document.createElement('meta'); tag.setAttribute(prop.startsWith('og:') ? 'property' : 'name', prop); document.head.appendChild(tag); }
     tag.setAttribute('content', content);
   };
   setMeta('og:title', `${product.name} — KMAC Tech`);
-  setMeta('og:image', `https://kmactech.com/${product.img}.webp`);
-  setMeta('og:description', `$${product.price.toFixed(2)} — Premium quality accessory from KMAC Tech.`);
+  setMeta('og:image', product.img || '');
+  setMeta('og:description', product.description || `${Number(product.price).toLocaleString('vi-VN')}đ — Phụ kiện chính hãng KMAC Tech.`);
 
-  // Build layout with WebP images
+  // --- Gallery (hỗ trợ nhiều ảnh từ API) ---
+  const allImages = product.images && product.images.length > 0
+    ? product.images.map(img => img.url || img)
+    : (product.img ? [product.img] : ['assets/product-macbook-case.webp']);
+
+  const mainImgSrc = allImages[0];
+  const thumbsHTML = allImages.map((url, i) =>
+    `<button class="${i === 0 ? 'active' : ''}" onclick="selectThumbUrl(this,'${url}')" aria-label="View image ${i + 1}">
+      <img src="${url}" alt="${product.name} - view ${i + 1}" width="72" height="72" loading="lazy">
+    </button>`
+  ).join('');
+
+  // Badge HTML
+  const badgeMap = {
+    'best seller': '<span class="badge badge-best">Best Seller</span>',
+    'best':        '<span class="badge badge-best">Best Seller</span>',
+    'new':         '<span class="badge badge-new">New Arrival</span>',
+    'sale':        '<span class="badge badge-sale">Sale</span>',
+    'hot':         '<span class="badge badge-sale">Hot</span>',
+    'limited':     '<span class="badge badge-new">Limited</span>',
+  };
+  const badgeHTML = product.badge ? (badgeMap[product.badge.toLowerCase()] || `<span class="badge badge-new">${product.badge}</span>`) : '';
+
+  // --- Layout HTML ---
   document.getElementById('productLayout').innerHTML = `
     <div class="gallery">
       <div class="gallery-main">
-        <picture>
-          <source srcset="${assetUrl(product.img + '.webp')}" type="image/webp">
-          <img src="${assetUrl(product.img + '.png')}" alt="${product.name}" id="mainImg" width="600" height="600">
-        </picture>
+        <img src="${mainImgSrc}" alt="${product.name}" id="mainImg" width="600" height="600" style="width:100%;height:100%;object-fit:contain;">
       </div>
-      <div class="gallery-thumbs">
-        <button class="active" onclick="selectThumb(this,'${product.img}')" aria-label="View image 1"><picture><source srcset="${assetUrl(product.img + '.webp')}" type="image/webp"><img src="${assetUrl(product.img + '.png')}" alt="View 1" width="72" height="72"></picture></button>
-        <button onclick="selectThumb(this,'${product.img}')" aria-label="View image 2"><picture><source srcset="${assetUrl(product.img + '.webp')}" type="image/webp"><img src="${assetUrl(product.img + '.png')}" alt="View 2" width="72" height="72"></picture></button>
-        <button onclick="selectThumb(this,'${product.img}')" aria-label="View image 3"><picture><source srcset="${assetUrl(product.img + '.webp')}" type="image/webp"><img src="${assetUrl(product.img + '.png')}" alt="View 3" width="72" height="72"></picture></button>
-      </div>
+      <div class="gallery-thumbs">${thumbsHTML}</div>
     </div>
     <div class="product-info-detail">
       <h1>${product.name}</h1>
       <div class="product-meta">
-        <div class="product-rating"><span class="stars" style="color:#FFC107">${renderStars(product.rating)}</span> <span>${product.reviews} reviews</span></div>
-        ${product.badge === 'best' ? '<span class="badge badge-best">Best Seller</span>' : ''}
-        ${product.badge === 'new' ? '<span class="badge badge-new">New Arrival</span>' : ''}
+        ${rating > 0 ? `<div class="product-rating"><span class="stars" style="color:#FFC107">${renderStars(Math.round(rating))}</span> <span>${reviewCount} reviews</span></div>` : ''}
+        ${badgeHTML}
       </div>
-      <div class="product-detail-price">$${product.price.toFixed(2)} ${product.oldPrice ? '<span class="old-price" style="font-size:1.1rem">$' + product.oldPrice.toFixed(2) + '</span>' : ''}</div>
-      <p class="product-description">Premium quality accessory designed for your everyday tech. Made with durable, eco-friendly materials that protect your device while looking stylish. Every KMAC Tech product comes with our 30-day happiness guarantee.</p>
+      <div class="product-detail-price">
+        ${Number(product.price).toLocaleString('vi-VN')}₫
+        ${product.oldPrice ? `<span class="old-price" style="font-size:1.1rem">${Number(product.oldPrice).toLocaleString('vi-VN')}₫</span>` : ''}
+      </div>
+      <p class="product-description">${product.description || 'Phụ kiện chất lượng cao, thiết kế tinh tế từ KMAC Tech. Bảo hành 30 ngày đổi trả.'}</p>
 
-      ${product.colors.length ? `<div class="variant-group"><label>Color: <strong id="selectedColor">${product.colors[0]}</strong></label><div class="color-swatches">${product.colors.map((c, i) => `<button class="color-swatch${i === 0 ? ' active' : ''}" style="background:${getColorHex(c)}" title="${c}" aria-label="Color: ${c}" onclick="selectColor(this,'${c}')"></button>`).join('')}</div></div>` : ''}
+      ${product.colors && product.colors.length ? `<div class="variant-group"><label>Màu sắc: <strong id="selectedColor">${product.colors[0]}</strong></label><div class="color-swatches">${product.colors.map((c, i) => `<button class="color-swatch${i === 0 ? ' active' : ''}" style="background:${getColorHex(c)}" title="${c}" aria-label="Color: ${c}" onclick="selectColor(this,'${c}')"></button>`).join('')}</div></div>` : ''}
 
-      ${product.sizes.length ? `<div class="variant-group"><label>Size / Model</label><div class="size-options">${product.sizes.map((s, i) => `<button class="size-option${i === 0 ? ' active' : ''}" onclick="selectSize(this)" aria-label="Size: ${s}">${s}</button>`).join('')}</div></div>` : ''}
+      ${product.sizes && product.sizes.length ? `<div class="variant-group"><label>Kích thước / Model</label><div class="size-options">${product.sizes.map((s, i) => `<button class="size-option${i === 0 ? ' active' : ''}" onclick="selectSize(this)" aria-label="Size: ${s}">${s}</button>`).join('')}</div></div>` : ''}
 
-      <div class="variant-group"><label for="qtyInput">Quantity</label>
-      <div class="quantity-selector">
-        <button onclick="changeQty(-1)" aria-label="Decrease quantity">−</button>
-        <input type="number" value="1" min="1" max="10" id="qtyInput" aria-label="Quantity">
-        <button onclick="changeQty(1)" aria-label="Increase quantity">+</button>
-      </div></div>
-
-      <button class="btn btn-primary add-to-cart-btn" onclick="addToCart(${product.id}, parseInt(document.getElementById('qtyInput').value))" id="addToCartBtn">🛒 Add to Cart</button>
+      ${product.stockQuantity === 0
+        ? `<div style="color:#ef4444;font-weight:600;margin-bottom:16px;">⚠️ Tạm hết hàng</div>`
+        : `<div class="variant-group"><label for="qtyInput">Số lượng</label>
+           <div class="quantity-selector">
+             <button onclick="changeQty(-1)" aria-label="Decrease quantity">−</button>
+             <input type="number" value="1" min="1" max="${product.stockQuantity || 99}" id="qtyInput" aria-label="Quantity">
+             <button onclick="changeQty(1)" aria-label="Increase quantity">+</button>
+           </div></div>
+           <button class="btn btn-primary add-to-cart-btn" onclick="addToCart('${product.id}', parseInt(document.getElementById('qtyInput').value))" id="addToCartBtn">🛒 Thêm vào giỏ hàng</button>`
+      }
 
       <div class="accordion" style="margin-top:32px;">
         <div class="accordion-item open">
-          <button class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="true">Description</button>
-          <div class="accordion-body"><div class="accordion-body-inner"><ul>
-            <li>Premium quality materials for maximum protection</li>
-            <li>Precise cutouts for all ports and buttons</li>
-            <li>Slim profile — adds minimal bulk to your device</li>
-            <li>Scratch-resistant, easy to clean surface</li>
-            <li>Available in multiple colors and sizes</li>
-          </ul></div></div>
+          <button class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="true">Mô tả sản phẩm</button>
+          <div class="accordion-body"><div class="accordion-body-inner"><p>${product.description || 'Chưa có mô tả.'}</p></div></div>
         </div>
         <div class="accordion-item">
-          <button class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">Specifications</button>
+          <button class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">Vận chuyển & Đổi trả</button>
           <div class="accordion-body"><div class="accordion-body-inner"><ul>
-            <li>Material: Polycarbonate / Premium fabric</li>
-            <li>Weight: Ultra-lightweight design</li>
-            <li>Compatibility: See size options above</li>
-            <li>Package: Product + microfiber cloth + KMAC sticker</li>
-          </ul></div></div>
-        </div>
-        <div class="accordion-item">
-          <button class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">Shipping & Returns</button>
-          <div class="accordion-body"><div class="accordion-body-inner"><ul>
-            <li>🚚 Free standard shipping across the US (3-5 business days)</li>
-            <li>⚡ Express shipping available ($9.99, 1-2 business days)</li>
-            <li>↩️ 30-day hassle-free returns</li>
-            <li>📦 All orders ship from our US warehouse</li>
+            <li>🚚 Giao hàng toàn quốc 2–5 ngày làm việc</li>
+            <li>⚡ Giao nhanh trong ngày cho HCM & HN</li>
+            <li>↩️ Đổi trả miễn phí trong 30 ngày</li>
+            <li>📦 Đóng gói cẩn thận, có hộp quà tặng</li>
           </ul></div></div>
         </div>
       </div>
     </div>`;
 
-  // Reviews
+  // --- Reviews ---
+  const ratingFixed = Number(rating).toFixed(1);
   document.getElementById('reviewsSummary').innerHTML = `
-    <div class="reviews-avg"><div class="big-num">${product.rating}.0</div><div class="stars" style="color:#FFC107;font-size:1.2rem;">${renderStars(product.rating)}</div><div style="color:var(--text-sec);font-size:.85rem;margin-top:4px;">${product.reviews} reviews</div></div>
+    <div class="reviews-avg">
+      <div class="big-num">${ratingFixed}</div>
+      <div class="stars" style="color:#FFC107;font-size:1.2rem;">${renderStars(Math.round(rating))}</div>
+      <div style="color:var(--text-sec);font-size:.85rem;margin-top:4px;">${reviewCount} đánh giá</div>
+    </div>
     <div class="review-bars">
-      <div class="review-bar"><span>5★</span><div class="bar"><div class="bar-fill" style="width:78%"></div></div><span>78%</span></div>
-      <div class="review-bar"><span>4★</span><div class="bar"><div class="bar-fill" style="width:15%"></div></div><span>15%</span></div>
-      <div class="review-bar"><span>3★</span><div class="bar"><div class="bar-fill" style="width:5%"></div></div><span>5%</span></div>
-      <div class="review-bar"><span>2★</span><div class="bar"><div class="bar-fill" style="width:1%"></div></div><span>1%</span></div>
-      <div class="review-bar"><span>1★</span><div class="bar"><div class="bar-fill" style="width:1%"></div></div><span>1%</span></div>
+      ${[5,4,3,2,1].map(star => `
+        <div class="review-bar"><span>${star}★</span><div class="bar"><div class="bar-fill" style="width:${star === Math.round(rating) ? 70 : star > Math.round(rating) ? 10 : 20}%"></div></div></div>
+      `).join('')}
     </div>`;
 
-  document.getElementById('reviewsList').innerHTML = SAMPLE_REVIEWS.map(r => `
-    <div class="review-card">
-      <div class="review-header"><div><span class="reviewer">${r.name}</span>${r.verified ? ' <span class="badge badge-new" style="font-size:.65rem;">✓ Verified</span>' : ''}</div><span class="review-date">${r.date}</span></div>
-      <div class="stars" style="color:#FFC107;margin-bottom:8px;">${renderStars(r.rating)}</div>
-      <p class="review-text">${r.text}</p>
-    </div>`).join('');
+  if (reviews.length > 0) {
+    document.getElementById('reviewsList').innerHTML = reviews.map(r => {
+      const rName = r.userId?.name || r.name || 'Ẩn danh';
+      const rDate = r.createdAt ? new Date(r.createdAt).toLocaleDateString('vi-VN') : '';
+      const rRating = r.rating || 5;
+      const rText = r.body || r.text || '';
+      return `
+        <div class="review-card">
+          <div class="review-header">
+            <div><span class="reviewer">${rName}</span> <span class="badge badge-new" style="font-size:.65rem;">✓ Verified</span></div>
+            <span class="review-date">${rDate}</span>
+          </div>
+          <div class="stars" style="color:#FFC107;margin-bottom:8px;">${renderStars(rRating)}</div>
+          <p class="review-text">${rText}</p>
+        </div>`;
+    }).join('');
+  } else {
+    document.getElementById('reviewsList').innerHTML = '<p style="color:var(--text-sec);padding:20px 0">Chưa có đánh giá nào.</p>';
+  }
 
-  // Related products
-  const related = PRODUCTS.filter(p => p.id !== product.id).slice(0, 4);
-  document.getElementById('relatedGrid').innerHTML = related.map(p => renderProductCard(p)).join('');
-});
+  // --- Related products ---
+  if (document.getElementById('relatedGrid')) {
+    document.getElementById('relatedGrid').innerHTML = related.length > 0
+      ? related.map(p => renderProductCard(p)).join('')
+      : '';
+  }
+}
 
-function selectThumb(btn, basePath) {
+// ===== UI Helpers =====
+function selectThumbUrl(btn, url) {
   btn.closest('.gallery-thumbs').querySelectorAll('button').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  const mainPicture = document.querySelector('.gallery-main picture');
-  if (mainPicture) {
-    mainPicture.querySelector('source').srcset = assetUrl(basePath + '.webp');
-    mainPicture.querySelector('img').src = assetUrl(basePath + '.png');
-  }
+  const mainImg = document.getElementById('mainImg');
+  if (mainImg) mainImg.src = url;
+}
+// Legacy support
+function selectThumb(btn, basePath) {
+  selectThumbUrl(btn, imgSrc(basePath));
 }
 function selectColor(btn, name) {
   btn.closest('.color-swatches').querySelectorAll('.color-swatch').forEach(s => s.classList.remove('active'));
   btn.classList.add('active');
-  document.getElementById('selectedColor').textContent = name;
+  const el = document.getElementById('selectedColor');
+  if (el) el.textContent = name;
 }
 function selectSize(btn) {
   btn.closest('.size-options').querySelectorAll('.size-option').forEach(s => s.classList.remove('active'));
@@ -165,7 +262,7 @@ function selectSize(btn) {
 }
 function changeQty(delta) {
   const inp = document.getElementById('qtyInput');
-  inp.value = Math.max(1, Math.min(10, parseInt(inp.value) + delta));
+  inp.value = Math.max(1, Math.min(parseInt(inp.max) || 99, parseInt(inp.value) + delta));
 }
 function toggleAccordion(btn) {
   const item = btn.closest('.accordion-item');

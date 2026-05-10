@@ -1,17 +1,9 @@
 /* ===== KMAC Tech — Main JS v2.0 ===== */
 /* Q1 Upgrade: Search, coupon fix, deduplicated utilities, a11y */
 
-// ===== Product Data Store =====
-const PRODUCTS = [
-  { id:1, name:'MacBook Pro 14" Crystal Clear Case', price:29.99, oldPrice:null, img:'assets/product-macbook-case', category:'cases', badge:'best', rating:5, reviews:128, colors:['Clear','Blue','Pink'], sizes:['MacBook Air 13"','MacBook Pro 14"','MacBook Pro 16"'] },
-  { id:2, name:'Premium Laptop Sleeve — Minimalist Gray', price:39.99, oldPrice:null, img:'assets/product-laptop-sleeve', category:'sleeves', badge:'new', rating:5, reviews:86, colors:['Gray','Navy','Black'], sizes:['13"','14"','15.6"','16"'] },
-  { id:3, name:'XL RGB Gaming Mousepad — Dark Blue', price:24.99, oldPrice:null, img:'assets/product-gaming-mousepad', category:'gaming', badge:'best', rating:4, reviews:214, colors:['Dark Blue','Black','White'], sizes:['Medium','Large','XL'] },
-  { id:4, name:'65W USB-C GaN Fast Charger — Compact', price:34.99, oldPrice:null, img:'assets/product-charger', category:'chargers', badge:null, rating:5, reviews:72, colors:['White','Black'], sizes:[] },
-  { id:5, name:'Wireless Mechanical Keyboard — White & Blue', price:49.99, oldPrice:62.99, img:'assets/product-keyboard', category:'gaming', badge:'sale', rating:5, reviews:156, colors:['White/Blue','Black/Red','Pink/White'], sizes:[] },
-  { id:6, name:'MacBook Air 13" Matte Pastel Case — Sky Blue', price:24.99, oldPrice:null, img:'assets/product-macbook-case', category:'cases', badge:null, rating:4, reviews:93, colors:['Sky Blue','Lavender','Mint','Pink'], sizes:['MacBook Air 13"','MacBook Air 15"'] },
-  { id:7, name:'USB-C Hub 7-in-1 — Space Gray', price:44.99, oldPrice:54.99, img:'assets/product-charger', category:'chargers', badge:'sale', rating:5, reviews:167, colors:['Space Gray','Silver'], sizes:[] },
-  { id:8, name:'Laptop Stand — Aluminum Adjustable', price:39.99, oldPrice:null, img:'assets/product-keyboard', category:'gaming', badge:'new', rating:4, reviews:58, colors:['Silver','Black'], sizes:[] },
-];
+// ===== Global Data Store =====
+let PRODUCTS = [];
+let CATEGORIES = [];
 
 // ===== Path Helpers =====
 // The home page lives at root while inner pages live in /pages.
@@ -36,45 +28,64 @@ function getColorHex(name) { return COLOR_HEX_MAP[name] || '#CBD5E1'; }
 
 // ===== Image Helper — WebP with PNG fallback =====
 function imgSrc(basePath) {
-  // basePath = 'assets/product-keyboard' (no extension)
+  if (/^(https?:|data:|\/)/.test(basePath)) return basePath;
   return assetUrl(basePath + '.webp');
 }
 function imgPicture(basePath, alt, cls = '', lazy = true) {
   const loadAttr = lazy ? 'loading="lazy"' : '';
+  if (/^(https?:|data:|\/)/.test(basePath)) {
+    return `<img src="${basePath}" alt="${alt}" ${cls ? 'class="' + cls + '"' : ''} ${loadAttr} width="400" height="400">`;
+  }
   return `<picture>
     <source srcset="${assetUrl(basePath + '.webp')}" type="image/webp">
     <img src="${assetUrl(basePath + '.png')}" alt="${alt}" ${cls ? 'class="' + cls + '"' : ''} ${loadAttr} width="400" height="400">
   </picture>`;
 }
 
-// ===== Cart Management =====
+// ===== Cart Management (Cookie-based) =====
+const CART_COOKIE = 'kmac_cart';
+const CART_DAYS  = 7; // Lưu 7 ngày
+
+function setCookie(name, value, days) {
+  const expires = new Date(Date.now() + days * 864e5).toUTCString();
+  document.cookie = `${name}=${encodeURIComponent(value)};expires=${expires};path=/;SameSite=Lax`;
+}
+function getCookie(name) {
+  return document.cookie
+    .split('; ')
+    .find(row => row.startsWith(name + '='))
+    ?.split('=')[1];
+}
 function getCart() {
-  return JSON.parse(localStorage.getItem('kmac_cart') || '[]');
+  try {
+    const raw = getCookie(CART_COOKIE);
+    return raw ? JSON.parse(decodeURIComponent(raw)) : [];
+  } catch { return []; }
 }
 function saveCart(cart) {
-  localStorage.setItem('kmac_cart', JSON.stringify(cart));
+  setCookie(CART_COOKIE, JSON.stringify(cart), CART_DAYS);
   updateCartCount();
 }
 function addToCart(productId, qty = 1) {
   const cart = getCart();
-  const existing = cart.find(i => i.id === productId);
+  const existing = cart.find(i => String(i.id) === String(productId));
   if (existing) { existing.qty += qty; }
-  else { cart.push({ id: productId, qty }); }
+  else { cart.push({ id: String(productId), qty }); }
   saveCart(cart);
   showToast('Added to cart! 🛒', 'success');
 }
 function removeFromCart(productId) {
-  saveCart(getCart().filter(i => i.id !== productId));
+  saveCart(getCart().filter(i => String(i.id) !== String(productId)));
 }
 function updateCartQty(productId, qty) {
   const cart = getCart();
-  const item = cart.find(i => i.id === productId);
+  const item = cart.find(i => String(i.id) === String(productId));
   if (item) { item.qty = Math.max(1, qty); }
   saveCart(cart);
 }
 function getCartTotal() {
   return getCart().reduce((sum, item) => {
-    const p = PRODUCTS.find(pr => pr.id === item.id);
+    const p = PRODUCTS.find(pr => String(pr.id) === String(item.id));
     return sum + (p ? p.price * item.qty : 0);
   }, 0);
 }
@@ -235,7 +246,45 @@ function initScrollAnimations() {
 }
 
 // ===== Init =====
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+  // 1. Map API data from server (fallback to mock data if error/empty)
+  try {
+    if (typeof categoryApi !== 'undefined') {
+      const resCat = await categoryApi.getCategories();
+      const serverCategories = resCat.data || resCat;
+      if (serverCategories && Array.isArray(serverCategories)) {
+        CATEGORIES = serverCategories;
+      }
+    }
+
+    if (typeof productApi !== 'undefined') {
+      const res = await productApi.getProducts();
+      // Backend KMAC trả về format { success: true, data: [...] }
+      const serverProducts = res.data || res;
+      if (serverProducts && Array.isArray(serverProducts) && serverProducts.length > 0) {
+        PRODUCTS = serverProducts.map(p => ({
+          ...p,
+          // Ánh xạ các trường từ API về chuẩn Frontend cũ nếu khác tên
+          id: p._id || p.id,
+          name: typeof p.name === 'object' ? (p.name.vn || p.name.en || '') : (p.name || ''),
+          price: p.price || p.regularPrice || p.salePrice || 0,
+          oldPrice: p.oldPrice || null,
+          img: p.images && p.images.length > 0 && p.images[0].url ? p.images[0].url : 'assets/product-macbook-case',
+          // Backend trả về categoryId là object hoặc string, ánh xạ sang slug để filter
+          category: p.categoryId && p.categoryId.slug ? p.categoryId.slug : p.categoryId || 'cases',
+          colors: p.colors || [],
+          sizes: p.sizes || []
+        }));
+      }
+    }
+  } catch (err) {
+    console.error("Lỗi tải API Products, sử dụng dữ liệu mẫu:", err);
+  }
+
+  // 2. Dispatch custom event để báo cho các file khác biết Data đã sẵn sàng
+  window.dispatchEvent(new Event('KmacDataLoaded'));
+
+  // 3. Khởi tạo các UI cơ bản
   updateCartCount();
   initMobileMenu();
   initSearch();
@@ -260,10 +309,7 @@ function renderProductCard(p) {
   return `<a href="${pageUrl(`product.html?id=${p.id}`)}" class="product-card">
     <div class="product-img">
       ${badgeHTML ? '<div class="product-badges">' + badgeHTML + '</div>' : ''}
-      <picture>
-        <source srcset="${assetUrl(p.img + '.webp')}" type="image/webp">
-        <img src="${assetUrl(p.img + '.png')}" alt="${p.name}" loading="lazy" width="400" height="400">
-      </picture>
+      ${imgPicture(p.img, p.name)}
     </div>
     <div class="product-info">
       <div class="product-rating"><span class="stars">${renderStars(p.rating)}</span> (${p.reviews})</div>

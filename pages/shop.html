@@ -63,24 +63,13 @@
     <section class="container">
       <div class="shop-layout">
         <aside class="shop-sidebar" aria-label="Product filters">
-          <!-- Silo 1: Laptops -->
-          <div class="filter-group"><h3 data-i18n="filter.laptops">💻 Laptops</h3><div class="filter-options">
-            <label><input type="checkbox" value="cases" class="filter-cat"> <span data-i18n="filter.mbpro">MacBook Pro (M1–M4)</span></label>
-            <label><input type="checkbox" value="sleeves" class="filter-cat"> <span data-i18n="filter.mbair">MacBook Air</span></label>
-            <label><input type="checkbox" value="gaming" class="filter-cat"> <span data-i18n="filter.gaming">Gaming Laptops</span></label>
-          </div></div>
-          <!-- Silo 2: Protection -->
-          <div class="filter-group"><h3 data-i18n="filter.protection">🛡️ Protection</h3><div class="filter-options">
-            <label><input type="checkbox" value="cases" class="filter-cat"> <span data-i18n="filter.iphonecases">iPhone Cases (12–17 Pro Max)</span></label>
-            <label><input type="checkbox" value="sleeves" class="filter-cat"> <span data-i18n="filter.skins">MacBook Full-body Skins</span></label>
-            <label><input type="checkbox" value="sleeves" class="filter-cat"> <span data-i18n="filter.sleeves">Sleeves & Bags</span></label>
-          </div></div>
-          <!-- Silo 3: Peripherals -->
-          <div class="filter-group"><h3 data-i18n="filter.peripherals">🔌 Peripherals</h3><div class="filter-options">
-            <label><input type="checkbox" value="chargers" class="filter-cat"> <span data-i18n="filter.hdmi">High-speed HDMI</span></label>
-            <label><input type="checkbox" value="chargers" class="filter-cat"> <span data-i18n="filter.hubs">USB-C 10-in-1 Hubs</span></label>
-            <label><input type="checkbox" value="chargers" class="filter-cat"> <span data-i18n="filter.adapters">Adapters & Cables</span></label>
-          </div></div>
+          <!-- Category filters (rendered dynamically from API) -->
+          <div class="filter-group">
+            <h3>📂 Danh mục</h3>
+            <div class="filter-options" id="categoryFilterOptions">
+              <div style="color:var(--text-sec);font-size:.85rem;padding:8px 0">Đang tải...</div>
+            </div>
+          </div>
           <!-- Price & Rating -->
           <div class="filter-group"><h3 data-i18n="filter.price">Price Range</h3><div class="filter-options">
             <label><input type="checkbox" value="0-25" class="filter-price"> Under $25</label>
@@ -129,6 +118,10 @@
     <div class="modal"><button class="modal-close" onclick="closeQuickView()" aria-label="Close">✕</button><div class="modal-grid" id="quickViewContent"></div></div>
   </div>
 
+  <script src="../js/api/config.js" defer></script>
+  <script src="../js/api/productApi.js" defer></script>
+  <script src="../js/api/categoryApi.js" defer></script>
+  <script src="../js/api/blogApi.js" defer></script>
   <script src="../js/main.js" defer></script>
   <script src="../js/i18n.js" defer></script>
   <script src="../js/shop.js" defer></script>
