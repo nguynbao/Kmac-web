@@ -4,7 +4,8 @@
   "description": "KMAC Tech là dự án website thương mại điện tử cho phụ kiện MacBook, laptop gaming và phụ kiện công nghệ. Repository này gồm hai phần:",
   "main": "index.js",
   "scripts": {
-    "dev": "live-server --port=8080 --middleware=$PWD/env-middleware.js"
+    "dev": "live-server --port=8080 --middleware=$PWD/env-middleware.js",
+    "dev:prod-api": "API_BASE_URL=https://kmac-server.onrender.com/api live-server --port=8080 --middleware=$PWD/env-middleware.js"
   },
   "repository": {
     "type": "git",

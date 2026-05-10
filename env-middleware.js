@@ -1,3 +1,4 @@
+require("dotenv").config({ path: ".env.development" });
 require("dotenv").config();
 const fs = require("fs");
 const path = require("path");
@@ -8,12 +9,12 @@ module.exports = function (req, res, next) {
     const configPath = path.join(__dirname, "js", "api", "config.js");
     let content = fs.readFileSync(configPath, "utf8");
 
-    // Đọc biến từ .env (fallback về localhost:3000 nếu không có)
+    // Đọc biến từ .env.development trước, fallback về .env rồi localhost.
     const envUrl = process.env.API_BASE_URL || "http://localhost:3000/api";
 
     // Thay thế biến trong nội dung file gửi xuống trình duyệt
     content = content.replace(
-      /const API_BASE_URL\s*=\s*["'].*?["'];/,
+      /const API_BASE_URL\s*=\s*\(\(\)\s*=>\s*\{[\s\S]*?\}\)\(\);/,
       `const API_BASE_URL = "${envUrl}";`,
     );
 
