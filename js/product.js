@@ -149,7 +149,7 @@ function renderDetail(product, reviews, related) {
   document.getElementById('productLayout').innerHTML = `
     <div class="gallery">
       <div class="gallery-main">
-        <img src="${mainImgSrc}" alt="${product.name}" id="mainImg" width="600" height="600" style="width:100%;height:100%;object-fit:contain;">
+        <img src="${mainImgSrc}" alt="${product.name}" id="mainImg" width="600" height="600">
       </div>
       <div class="gallery-thumbs">${thumbsHTML}</div>
     </div>
