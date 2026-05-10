@@ -37,7 +37,7 @@ function renderOrderSidebar() {
       return `<div class="order-item">
         <div class="order-item-img"><picture><source srcset="${assetUrl(p.img + '.webp')}" type="image/webp"><img src="${assetUrl(p.img + '.png')}" alt="${p.name}" width="56" height="56"></picture></div>
         <div style="flex:1"><div style="font-weight:600;font-size:.85rem;">${p.name}</div><div style="color:var(--text-sec);font-size:.8rem;">Qty: ${item.qty}</div></div>
-        <div style="font-weight:700;font-size:.9rem;">$${(p.price * item.qty).toFixed(2)}</div>
+        <div style="font-weight:700;font-size:.9rem;">${formatPrice(p.price * item.qty)}</div>
       </div>`;
     }).join('');
 
@@ -45,10 +45,10 @@ function renderOrderSidebar() {
   const finalTotal = total + shippingCost;
 
   summaryEl.innerHTML = `
-    <div class="summary-row"><span>Subtotal</span><span>$${subtotal.toFixed(2)}</span></div>
-    ${discount > 0 ? `<div class="summary-row" style="color:var(--green);"><span>Discount (${coupon.code})</span><span>-$${discount.toFixed(2)}</span></div>` : ''}
-    <div class="summary-row"><span>Shipping</span><span>${shippingCost === 0 ? '<span style="color:var(--green);font-weight:600;">FREE</span>' : '$' + shippingCost.toFixed(2)}</span></div>
-    <div class="summary-row total"><span>Total</span><span>$${finalTotal.toFixed(2)}</span></div>`;
+    <div class="summary-row"><span>Subtotal</span><span>${formatPrice(subtotal)}</span></div>
+    ${discount > 0 ? `<div class="summary-row" style="color:var(--green);"><span>Discount (${coupon.code})</span><span>${formatSignedCurrency(-discount)}</span></div>` : ''}
+    <div class="summary-row"><span>Shipping</span><span>${formatFreeOrCurrency(shippingCost)}</span></div>
+    <div class="summary-row total"><span>Total</span><span>${formatPrice(finalTotal)}</span></div>`;
 }
 
 function selectShipping(el, cost) {
@@ -98,7 +98,7 @@ function placeOrder() {
       <h2 style="font-size:1.8rem;margin-bottom:12px;">Order Placed Successfully!</h2>
       <p style="color:var(--text-sec);font-size:1.05rem;margin-bottom:8px;">Thank you for shopping with KMAC Tech, ${firstName}!</p>
       <p style="color:var(--text-sec);margin-bottom:8px;">A confirmation email has been sent to <strong>${email}</strong></p>
-      <p style="color:var(--text-sec);margin-bottom:32px;">Order total: <strong>$${(total + shippingCost).toFixed(2)}</strong></p>
+      <p style="color:var(--text-sec);margin-bottom:32px;">Order total: <strong>${formatPrice(total + shippingCost)}</strong></p>
       <a href="${pageUrl('shop.html')}" class="btn btn-primary btn-lg">Continue Shopping →</a>
     </div>`;
 }
