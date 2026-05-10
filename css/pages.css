@@ -30,9 +30,9 @@
 .gallery-main { border-radius: var(--radius-lg); overflow: hidden; background: var(--blue-light); aspect-ratio: 1; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; cursor: zoom-in; }
 .gallery-main img { width: 100%; height: 100%; object-fit: cover; transition: transform .3s ease; }
 .gallery-thumbs { display: flex; gap: 12px; }
-.gallery-thumbs button { width: 72px; height: 72px; border-radius: var(--radius-sm); overflow: hidden; border: 2px solid transparent; background: var(--blue-light); padding: 8px; cursor: pointer; transition: var(--transition); }
+.gallery-thumbs button { width: 72px; height: 72px; border-radius: var(--radius-sm); overflow: hidden; border: 2px solid transparent; background: var(--blue-light); padding: 0; cursor: pointer; transition: var(--transition); }
 .gallery-thumbs button.active, .gallery-thumbs button:hover { border-color: var(--blue); }
-.gallery-thumbs button img { width: 100%; height: 100%; object-fit: contain; }
+.gallery-thumbs button img { width: 100%; height: 100%; object-fit: cover; border-radius: calc(var(--radius-sm) - 2px); }
 .product-info-detail h1 { font-size: 1.8rem; margin-bottom: 8px; }
 .product-meta { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; flex-wrap: wrap; }
 .product-detail-price { font-size: 1.8rem; font-weight: 800; color: var(--blue); margin-bottom: 20px; }
