@@ -54,6 +54,7 @@ function normalizeProduct(product) {
         ? product.images[0].url
         : "assets/product-macbook-case",
     category: getProductCategorySlug(product),
+    subcategory: product.subcategoryId?.slug || product.subcategoryId || product.subcategory || "",
     colors: product.colors || [],
     sizes: product.sizes || [],
     rating: product.rating || product.ratingAverage || 0,
