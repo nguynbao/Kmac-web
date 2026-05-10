@@ -233,6 +233,8 @@ input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 3px
 
 /* ===== FOOTER ===== */
 .footer { background: var(--text); color: #fff; padding: 64px 0 0; }
+.footer-compact { padding-top: 0; }
+.footer-compact .footer-bottom { min-height: 96px; }
 .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; padding-bottom: 48px; border-bottom: 1px solid rgba(255,255,255,.1); }
 .footer-brand p { color: rgba(255,255,255,.6); margin-top: 12px; font-size: .9rem; line-height: 1.7; }
 .footer h4 { font-size: .85rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px; color: rgba(255,255,255,.4); }
@@ -518,4 +520,3 @@ input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 3px
   .info-value { text-align: left; }
   .order-details-grid { grid-template-columns: 1fr; }
 }
-
