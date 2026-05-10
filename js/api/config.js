@@ -1,6 +1,15 @@
 // ===== KMAC Tech — API Config =====
 
-const API_BASE_URL = "INJECTED_BY_ENV_MIDDLEWARE";
+const API_BASE_URL = (() => {
+  const injectedUrl = "INJECTED_BY_ENV_MIDDLEWARE";
+  if (injectedUrl && injectedUrl !== "INJECTED_BY_ENV_MIDDLEWARE") {
+    return injectedUrl;
+  }
+  if (window.KMAC_API_BASE_URL) {
+    return window.KMAC_API_BASE_URL;
+  }
+  return "https://kmac-server.onrender.com/api";
+})();
 
 async function fetchAPI(endpoint, options = {}) {
   const { silent = false, headers = {}, ...fetchOptions } = options;
