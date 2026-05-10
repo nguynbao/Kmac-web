@@ -1,7 +1,8 @@
 // ===== KMAC Tech — Product Render Helpers =====
 
 function renderStars(rating) {
-  return "★".repeat(rating) + "☆".repeat(5 - rating);
+  const roundedRating = formatRating(rating);
+  return "★".repeat(roundedRating) + "☆".repeat(5 - roundedRating);
 }
 
 function renderProductCard(product) {
@@ -11,15 +12,15 @@ function renderProductCard(product) {
   } else if (product.badge === "new") {
     badgeHTML = '<span class="badge badge-new">New</span>';
   } else if (product.badge === "sale") {
-    badgeHTML =
-      '<span class="badge badge-sale">-' +
-      Math.round((1 - product.price / product.oldPrice) * 100) +
-      "%</span>";
+    const discountPercent = formatDiscountPercent(product.price, product.oldPrice);
+    badgeHTML = discountPercent
+      ? `<span class="badge badge-sale">-${discountPercent}%</span>`
+      : '<span class="badge badge-sale">Sale</span>';
   }
 
   const priceHTML = product.oldPrice
-    ? `$${product.price.toFixed(2)} <span class="old-price">$${product.oldPrice.toFixed(2)}</span>`
-    : `$${product.price.toFixed(2)}`;
+    ? `${formatPrice(product.price)} <span class="old-price">${formatPrice(product.oldPrice)}</span>`
+    : formatPrice(product.price);
 
   return `<a href="${pageUrl(`product.html?id=${product.id}`)}" class="product-card">
     <div class="product-img">
@@ -27,7 +28,7 @@ function renderProductCard(product) {
       ${imgPicture(product.img, product.name)}
     </div>
     <div class="product-info">
-      <div class="product-rating"><span class="stars">${renderStars(product.rating)}</span> (${product.reviews})</div>
+      <div class="product-rating"><span class="stars">${renderStars(product.rating)}</span> (${formatReviewCount(product.reviews)})</div>
       <h3 class="product-name">${product.name}</h3>
       <div class="product-price">${priceHTML}</div>
       <div class="product-actions"><button class="btn btn-cart" onclick="event.preventDefault();addToCart('${product.id}')">Add to Cart</button></div>

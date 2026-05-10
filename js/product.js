@@ -104,7 +104,7 @@ function renderDetail(product, reviews, related) {
     "brand": { "@type": "Brand", "name": "KMAC Tech" },
     "offers": {
       "@type": "Offer",
-      "price": Number(product.price).toFixed(2),
+      "price": toFiniteNumber(product.price).toFixed(2),
       "priceCurrency": "VND",
       "availability": product.stockQuantity !== 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
     },
@@ -120,7 +120,7 @@ function renderDetail(product, reviews, related) {
   };
   setMeta('og:title', `${product.name} — KMAC Tech`);
   setMeta('og:image', product.img || '');
-  setMeta('og:description', product.description || `${Number(product.price).toLocaleString('vi-VN')}đ — Phụ kiện chính hãng KMAC Tech.`);
+  setMeta('og:description', product.description || `${formatPrice(product.price)} — Phụ kiện chính hãng KMAC Tech.`);
 
   // --- Gallery (hỗ trợ nhiều ảnh từ API) ---
   const allImages = product.images && product.images.length > 0
@@ -156,12 +156,12 @@ function renderDetail(product, reviews, related) {
     <div class="product-info-detail">
       <h1>${product.name}</h1>
       <div class="product-meta">
-        ${rating > 0 ? `<div class="product-rating"><span class="stars" style="color:#FFC107">${renderStars(Math.round(rating))}</span> <span>${reviewCount} reviews</span></div>` : ''}
+        ${rating > 0 ? `<div class="product-rating"><span class="stars" style="color:#FFC107">${renderStars(rating)}</span> <span>${formatReviewCount(reviewCount)}</span></div>` : ''}
         ${badgeHTML}
       </div>
       <div class="product-detail-price">
-        ${Number(product.price).toLocaleString('vi-VN')}₫
-        ${product.oldPrice ? `<span class="old-price" style="font-size:1.1rem">${Number(product.oldPrice).toLocaleString('vi-VN')}₫</span>` : ''}
+        ${formatPrice(product.price)}
+        ${product.oldPrice ? `<span class="old-price" style="font-size:1.1rem">${formatPrice(product.oldPrice)}</span>` : ''}
       </div>
       <p class="product-description">${product.description || 'Phụ kiện chất lượng cao, thiết kế tinh tế từ KMAC Tech. Bảo hành 30 ngày đổi trả.'}</p>
 
@@ -198,12 +198,12 @@ function renderDetail(product, reviews, related) {
     </div>`;
 
   // --- Reviews ---
-  const ratingFixed = Number(rating).toFixed(1);
+  const ratingFixed = toFiniteNumber(rating).toFixed(1);
   document.getElementById('reviewsSummary').innerHTML = `
     <div class="reviews-avg">
       <div class="big-num">${ratingFixed}</div>
-      <div class="stars" style="color:#FFC107;font-size:1.2rem;">${renderStars(Math.round(rating))}</div>
-      <div style="color:var(--text-sec);font-size:.85rem;margin-top:4px;">${reviewCount} đánh giá</div>
+      <div class="stars" style="color:#FFC107;font-size:1.2rem;">${renderStars(rating)}</div>
+      <div style="color:var(--text-sec);font-size:.85rem;margin-top:4px;">${formatReviewCount(reviewCount)}</div>
     </div>
     <div class="review-bars">
       ${[5,4,3,2,1].map(star => `

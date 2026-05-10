@@ -38,7 +38,7 @@ function renderCart() {
         <input type="number" value="${item.qty}" min="1" max="${p.stockQuantity || 99}" aria-label="Quantity" onchange="updateCartQty('${p.id}',parseInt(this.value));renderCart()">
         <button onclick="updateCartQty('${p.id}',${item.qty + 1});renderCart()" aria-label="Increase">+</button>
       </div>
-      <div class="cart-item-price">${Number(p.price * item.qty).toLocaleString('vi-VN')}₫</div>
+      <div class="cart-item-price">${formatPrice(p.price * item.qty)}</div>
       <button class="cart-item-remove" onclick="removeFromCart('${p.id}');renderCart()" aria-label="Remove ${p.name}">✕</button>
     </div>`;
   }).join('');
@@ -61,8 +61,8 @@ function renderCart() {
     </div>
     <div class="cart-summary">
       <h2>Order Summary</h2>
-      <div class="summary-row"><span>Subtotal</span><span>$${subtotal.toFixed(2)}</span></div>
-      ${discount > 0 ? `<div class="summary-row" style="color:var(--green);"><span>Discount</span><span>-$${discount.toFixed(2)}</span></div>` : ''}
+      <div class="summary-row"><span>Subtotal</span><span>${formatPrice(subtotal)}</span></div>
+      ${discount > 0 ? `<div class="summary-row" style="color:var(--green);"><span>Discount</span><span>${formatSignedCurrency(-discount)}</span></div>` : ''}
       <div class="summary-row"><span>Shipping</span><span style="color:var(--green);font-weight:600;">FREE 🎉</span></div>
       ${couponDisplay}
       ${!coupon ? `<div class="coupon-input">
@@ -70,7 +70,7 @@ function renderCart() {
         <input type="text" placeholder="Coupon code" id="couponInput">
         <button class="btn btn-secondary btn-sm" onclick="applyCoupon()">Apply</button>
       </div>` : ''}
-      <div class="summary-row total"><span>Total</span><span>$${total.toFixed(2)}</span></div>
+      <div class="summary-row total"><span>Total</span><span>${formatPrice(total)}</span></div>
       <a href="${pageUrl('checkout.html')}" class="btn btn-primary checkout-btn btn-lg">Proceed to Checkout →</a>
       <div style="text-align:center;margin-top:16px;">
         <a href="${pageUrl('shop.html')}" style="color:var(--text-sec);font-size:.85rem;">← Continue Shopping</a>

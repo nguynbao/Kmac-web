@@ -91,7 +91,7 @@ function initSearch() {
             <img src="${imgSrc(p.img)}" alt="${p.name}" width="48" height="48">
             <div class="result-info">
               <div class="result-name">${p.name}</div>
-              <div class="result-price">$${p.price.toFixed(2)}</div>
+              <div class="result-price">${formatPrice(p.price)}</div>
             </div>
           </a>`,
           )
