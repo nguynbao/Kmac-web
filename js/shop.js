@@ -14,7 +14,7 @@ window.addEventListener('KmacDataLoaded', () => {
           </label>`;
         
         if (cat.children && cat.children.length > 0) {
-          html += `<div class="subcategory-filters" style="padding-left: 20px; display: flex; flex-direction: column; gap: 4px; margin-top: 4px;">`;
+          html += `<div class="subcategory-filters" style="padding-left: 20px; display: none; flex-direction: column; gap: 4px; margin-top: 4px;">`;
           html += cat.children.map(sub => {
             const subSlug = sub.slug || (sub._id || sub.id);
             const subName = typeof sub.name === 'object' ? (sub.name.vn || sub.name.en || subSlug) : (sub.name || subSlug);
@@ -40,6 +40,25 @@ window.addEventListener('KmacDataLoaded', () => {
     if (cb) cb.checked = true;
   }
   
+  function updateSubcategoryVisibility() {
+    document.querySelectorAll('.category-filter-group').forEach(group => {
+      const parentCb = group.querySelector('.filter-cat:not([data-parent])');
+      const subContainer = group.querySelector('.subcategory-filters');
+      
+      if (subContainer) {
+        // Mở menu con nếu danh mục cha được chọn, hoặc nếu bất kỳ danh mục con nào đang được chọn
+        const isParentChecked = parentCb && parentCb.checked;
+        const isAnyChildChecked = [...subContainer.querySelectorAll('.filter-cat')].some(cb => cb.checked);
+        
+        if (isParentChecked || isAnyChildChecked) {
+          subContainer.style.display = 'flex';
+        } else {
+          subContainer.style.display = 'none';
+        }
+      }
+    });
+  }
+
   document.querySelectorAll('.filter-cat').forEach(cb => {
     cb.addEventListener('change', (e) => {
       if (e.target.checked) {
@@ -47,6 +66,7 @@ window.addEventListener('KmacDataLoaded', () => {
           if (other !== e.target) other.checked = false;
         });
       }
+      updateSubcategoryVisibility();
       applyFilters();
     });
   });
@@ -58,6 +78,8 @@ window.addEventListener('KmacDataLoaded', () => {
   const sortSelect = document.getElementById('sortSelect');
   if (sortSelect) sortSelect.addEventListener('change', applyFilters);
 
+  // Initialize visibility state on page load
+  updateSubcategoryVisibility();
   applyFilters();
 });
 
@@ -123,7 +145,15 @@ function clearFilters() {
   document.querySelectorAll('.filter-cat, .filter-price, .filter-rating').forEach(cb => cb.checked = false);
   const sortSelect = document.getElementById('sortSelect');
   if (sortSelect) sortSelect.value = 'best';
-  applyFilters();
+  
+  // Triggers change event to hide subcategories properly
+  const firstCat = document.querySelector('.filter-cat');
+  if (firstCat) {
+    const event = new Event('change');
+    firstCat.dispatchEvent(event);
+  } else {
+    applyFilters();
+  }
 }
 
 function openQuickView(productId) {
