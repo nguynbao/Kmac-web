@@ -42,12 +42,28 @@ function imgPicture(basePath, alt, cls = '', lazy = true) {
   </picture>`;
 }
 
-// ===== Cart Management =====
+// ===== Cart Management (Cookie-based) =====
+const CART_COOKIE = 'kmac_cart';
+const CART_DAYS  = 7; // Lưu 7 ngày
+
+function setCookie(name, value, days) {
+  const expires = new Date(Date.now() + days * 864e5).toUTCString();
+  document.cookie = `${name}=${encodeURIComponent(value)};expires=${expires};path=/;SameSite=Lax`;
+}
+function getCookie(name) {
+  return document.cookie
+    .split('; ')
+    .find(row => row.startsWith(name + '='))
+    ?.split('=')[1];
+}
 function getCart() {
-  return JSON.parse(localStorage.getItem('kmac_cart') || '[]');
+  try {
+    const raw = getCookie(CART_COOKIE);
+    return raw ? JSON.parse(decodeURIComponent(raw)) : [];
+  } catch { return []; }
 }
 function saveCart(cart) {
-  localStorage.setItem('kmac_cart', JSON.stringify(cart));
+  setCookie(CART_COOKIE, JSON.stringify(cart), CART_DAYS);
   updateCartCount();
 }
 function addToCart(productId, qty = 1) {
