@@ -144,6 +144,12 @@ GET /api/categories/{slug}
 POST /api/admin/categories
 PUT /api/admin/categories/{id}
 DELETE /api/admin/categories/{id}
+
+GET /api/subcategories
+GET /api/subcategories/{slug}
+POST /api/admin/subcategories
+PUT /api/admin/subcategories/{id}
+DELETE /api/admin/subcategories/{id}
 ```
 
 ## 5.3 Search
