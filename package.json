@@ -1,0 +1,25 @@
+{
+  "name": "kmac-tech",
+  "version": "1.0.0",
+  "description": "KMAC Tech là dự án website thương mại điện tử cho phụ kiện MacBook, laptop gaming và phụ kiện công nghệ. Repository này gồm hai phần:",
+  "main": "index.js",
+  "scripts": {
+    "dev": "live-server --port=8080 --middleware=$PWD/env-middleware.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nguynbao/Kmac-web.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/nguynbao/Kmac-web/issues"
+  },
+  "homepage": "https://github.com/nguynbao/Kmac-web#readme",
+  "devDependencies": {
+    "dotenv": "^17.4.2",
+    "live-server": "^1.2.2"
+  }
+}

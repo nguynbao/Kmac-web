@@ -1,17 +1,12 @@
 /* ===== Product Detail JS v2.0 ===== */
 /* Uses shared getColorHex() from main.js, WebP images via <picture> */
 
-const SAMPLE_REVIEWS = [
-  { name: 'Sarah M.', date: 'Apr 28, 2026', rating: 5, text: 'Absolutely love this! The quality is amazing and it fits my MacBook perfectly. The color is even more beautiful in person. Highly recommend! 💙', verified: true },
-  { name: 'James K.', date: 'Apr 15, 2026', rating: 5, text: 'Great build quality and the packaging was really cute. Shipped fast and arrived in perfect condition. Will definitely buy more from KMAC Tech.', verified: true },
-  { name: 'Emily R.', date: 'Mar 30, 2026', rating: 4, text: 'Really nice product, looks exactly like the photos. Only giving 4 stars because I wish there were more color options. Otherwise perfect!', verified: true },
-  { name: 'Mike T.', date: 'Mar 12, 2026', rating: 5, text: 'This is my third purchase from KMAC Tech and they never disappoint. Premium quality at a fair price. The customer service is also top-notch!', verified: true },
-];
+const SAMPLE_REVIEWS = [];
 
-document.addEventListener('DOMContentLoaded', () => {
+window.addEventListener('KmacDataLoaded', () => {
   const params = new URLSearchParams(window.location.search);
-  const productId = parseInt(params.get('id')) || 1;
-  const product = PRODUCTS.find(p => p.id === productId) || PRODUCTS[0];
+  const productId = params.get('id') || "1";
+  const product = PRODUCTS.find(p => String(p.id) === String(productId)) || PRODUCTS[0];
 
   // Dynamic SEO
   document.title = `${product.name} — KMAC Tech`;

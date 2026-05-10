@@ -2,16 +2,7 @@
 /* Q1 Upgrade: Search, coupon fix, deduplicated utilities, a11y */
 
 // ===== Product Data Store =====
-const PRODUCTS = [
-  { id:1, name:'MacBook Pro 14" Crystal Clear Case', price:29.99, oldPrice:null, img:'assets/product-macbook-case', category:'cases', badge:'best', rating:5, reviews:128, colors:['Clear','Blue','Pink'], sizes:['MacBook Air 13"','MacBook Pro 14"','MacBook Pro 16"'] },
-  { id:2, name:'Premium Laptop Sleeve — Minimalist Gray', price:39.99, oldPrice:null, img:'assets/product-laptop-sleeve', category:'sleeves', badge:'new', rating:5, reviews:86, colors:['Gray','Navy','Black'], sizes:['13"','14"','15.6"','16"'] },
-  { id:3, name:'XL RGB Gaming Mousepad — Dark Blue', price:24.99, oldPrice:null, img:'assets/product-gaming-mousepad', category:'gaming', badge:'best', rating:4, reviews:214, colors:['Dark Blue','Black','White'], sizes:['Medium','Large','XL'] },
-  { id:4, name:'65W USB-C GaN Fast Charger — Compact', price:34.99, oldPrice:null, img:'assets/product-charger', category:'chargers', badge:null, rating:5, reviews:72, colors:['White','Black'], sizes:[] },
-  { id:5, name:'Wireless Mechanical Keyboard — White & Blue', price:49.99, oldPrice:62.99, img:'assets/product-keyboard', category:'gaming', badge:'sale', rating:5, reviews:156, colors:['White/Blue','Black/Red','Pink/White'], sizes:[] },
-  { id:6, name:'MacBook Air 13" Matte Pastel Case — Sky Blue', price:24.99, oldPrice:null, img:'assets/product-macbook-case', category:'cases', badge:null, rating:4, reviews:93, colors:['Sky Blue','Lavender','Mint','Pink'], sizes:['MacBook Air 13"','MacBook Air 15"'] },
-  { id:7, name:'USB-C Hub 7-in-1 — Space Gray', price:44.99, oldPrice:54.99, img:'assets/product-charger', category:'chargers', badge:'sale', rating:5, reviews:167, colors:['Space Gray','Silver'], sizes:[] },
-  { id:8, name:'Laptop Stand — Aluminum Adjustable', price:39.99, oldPrice:null, img:'assets/product-keyboard', category:'gaming', badge:'new', rating:4, reviews:58, colors:['Silver','Black'], sizes:[] },
-];
+let PRODUCTS = [];
 
 // ===== Path Helpers =====
 // The home page lives at root while inner pages live in /pages.
@@ -235,7 +226,35 @@ function initScrollAnimations() {
 }
 
 // ===== Init =====
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+  // 1. Map API data from server (fallback to mock data if error/empty)
+  try {
+    if (typeof productApi !== 'undefined') {
+      const res = await productApi.getProducts();
+      // Backend KMAC trả về format { success: true, data: [...] }
+      const serverProducts = res.data || res;
+      if (serverProducts && Array.isArray(serverProducts) && serverProducts.length > 0) {
+        PRODUCTS = serverProducts.map(p => ({
+          ...p,
+          // Ánh xạ các trường từ API về chuẩn Frontend cũ nếu khác tên
+          id: p._id || p.id,
+          name: p.name,
+          price: p.price || p.regularPrice,
+          oldPrice: p.oldPrice || null,
+          img: p.images && p.images.length > 0 ? p.images[0] : 'assets/product-macbook-case',
+          colors: p.colors || [],
+          sizes: p.sizes || []
+        }));
+      }
+    }
+  } catch (err) {
+    console.error("Lỗi tải API Products, sử dụng dữ liệu mẫu:", err);
+  }
+
+  // 2. Dispatch custom event để báo cho các file khác biết Data đã sẵn sàng
+  window.dispatchEvent(new Event('KmacDataLoaded'));
+
+  // 3. Khởi tạo các UI cơ bản
   updateCartCount();
   initMobileMenu();
   initSearch();

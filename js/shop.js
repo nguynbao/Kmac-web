@@ -1,5 +1,5 @@
 /* ===== Shop Page JS v2.0 ===== */
-document.addEventListener('DOMContentLoaded', () => {
+window.addEventListener('KmacDataLoaded', () => {
   const params = new URLSearchParams(window.location.search);
   const prefilterCat = params.get('cat');
   if (prefilterCat) {

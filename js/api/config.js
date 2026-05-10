@@ -1,12 +1,12 @@
 // ===== KMAC Tech — API Config =====
 
-const API_BASE_URL = 'http://localhost:5000/api';
+const API_BASE_URL = "INJECTED_BY_ENV_MIDDLEWARE";
 
 async function fetchAPI(endpoint, options = {}) {
   try {
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         ...options.headers,
       },
       ...options,
