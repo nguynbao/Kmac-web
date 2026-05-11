@@ -3,30 +3,34 @@
 
 class KmacHeader extends HTMLElement {
   connectedCallback() {
-    const isPages = window.location.pathname.includes('/pages/');
+    const isPages = window.location.pathname.includes("/pages/");
     const currentPath = window.location.pathname;
-    
+
     // Xử lý đường dẫn tương đối
-    const homeUrl = isPages ? '../index.html' : 'index.html';
-    const shopUrl = isPages ? 'shop.html' : 'pages/shop.html';
-    const blogUrl = isPages ? 'blog.html' : 'pages/blog.html';
-    const cartUrl = isPages ? 'cart.html' : 'pages/cart.html';
-    
+    const homeUrl = isPages ? "../index.html" : "index.html";
+    const shopUrl = isPages ? "shop.html" : "pages/shop.html";
+    const blogUrl = isPages ? "blog.html" : "pages/blog.html";
+    const cartUrl = isPages ? "cart.html" : "pages/cart.html";
+
     // Kiểm tra active link
-    const isHome = currentPath.endsWith('/') || currentPath.endsWith('index.html');
-    const isShop = currentPath.includes('shop.html') || currentPath.includes('product.html');
-    const isBlog = currentPath.includes('blog.html');
-    const isCart = currentPath.includes('cart.html') || currentPath.includes('checkout.html');
+    const isHome =
+      currentPath.endsWith("/") || currentPath.endsWith("index.html");
+    const isShop =
+      currentPath.includes("shop.html") || currentPath.includes("product.html");
+    const isBlog = currentPath.includes("blog.html");
+    const isCart =
+      currentPath.includes("cart.html") ||
+      currentPath.includes("checkout.html");
 
     this.innerHTML = `
       <header class="header" id="header" role="banner">
         <div class="container flex-between">
           <a href="${homeUrl}" class="logo" aria-label="KMAC Tech — Home">KMAC<span>Tech</span></a>
           <nav class="nav-links" id="navLinks" aria-label="Main navigation">
-            <a href="${homeUrl}" class="${isHome ? 'active' : ''}" data-i18n="nav.home">Home</a>
-            <a href="${shopUrl}" class="${isShop ? 'active' : ''}" data-i18n="nav.shop">Shop</a>
-            <a href="${blogUrl}" class="${isBlog ? 'active' : ''}" data-i18n="nav.blog">Blog</a>
-            <a href="${cartUrl}" class="${isCart ? 'active' : ''}" data-i18n="nav.cart">Cart</a>
+            <a href="${homeUrl}" class="${isHome ? "active" : ""}" data-i18n="nav.home">Home</a>
+            <a href="${shopUrl}" class="${isShop ? "active" : ""}" data-i18n="nav.shop">Shop</a>
+            <a href="${blogUrl}" class="${isBlog ? "active" : ""}" data-i18n="nav.blog">Blog</a>
+            <a href="${cartUrl}" class="${isCart ? "active" : ""}" data-i18n="nav.cart">Cart</a>
           </nav>
           <div class="header-actions">
             <div class="lang-switcher" aria-label="Language Switcher">
@@ -47,27 +51,27 @@ class KmacHeader extends HTMLElement {
         </div>
       </header>
       <div class="mobile-menu" id="mobileMenu" role="navigation" aria-label="Mobile navigation">
-        <a href="${homeUrl}" class="${isHome ? 'active' : ''}">🏠 Home</a>
-        <a href="${shopUrl}" class="${isShop ? 'active' : ''}">🛍️ Shop</a>
-        <a href="${blogUrl}" class="${isBlog ? 'active' : ''}">📝 Blog</a>
-        <a href="${cartUrl}" class="${isCart ? 'active' : ''}">🛒 Cart</a>
+        <a href="${homeUrl}" class="${isHome ? "active" : ""}">🏠 Home</a>
+        <a href="${shopUrl}" class="${isShop ? "active" : ""}">🛍️ Shop</a>
+        <a href="${blogUrl}" class="${isBlog ? "active" : ""}">📝 Blog</a>
+        <a href="${cartUrl}" class="${isCart ? "active" : ""}">🛒 Cart</a>
       </div>
     `;
 
     // Gọi lại các hàm khởi tạo từ main.js sau khi render UI
     setTimeout(() => {
-      if (typeof initMobileMenu === 'function') initMobileMenu();
-      if (typeof initSearch === 'function') initSearch();
-      if (typeof updateCartCount === 'function') updateCartCount();
-      if (typeof initI18n === 'function') initI18n(); // nếu có i18n
+      if (typeof initMobileMenu === "function") initMobileMenu();
+      if (typeof initSearch === "function") initSearch();
+      if (typeof updateCartCount === "function") updateCartCount();
+      if (typeof initI18n === "function") initI18n(); // nếu có i18n
     }, 0);
   }
 }
 
 class KmacFooter extends HTMLElement {
   connectedCallback() {
-    const isPages = window.location.pathname.includes('/pages/');
-    const shopUrl = isPages ? 'shop.html' : 'pages/shop.html';
+    const isPages = window.location.pathname.includes("/pages/");
+    const shopUrl = isPages ? "shop.html" : "pages/shop.html";
 
     this.innerHTML = `
       <footer class="footer" role="contentinfo">
@@ -99,8 +103,8 @@ class KmacFooter extends HTMLElement {
               <h4>Follow Us</h4>
               <div class="footer-links">
                 <a href="#" aria-label="Follow us on Instagram">Instagram</a>
-                <a href="#" aria-label="Follow us on TikTok">TikTok</a>
-                <a href="#" aria-label="Follow us on Twitter">Twitter / X</a>
+                <a href="https://www.tiktok.com/@kmacdanang" aria-label="Follow us on TikTok">TikTok</a>
+                <a href="#https://www.facebook.com/profile.php?id=61576325795691" aria-label="Follow us on Twitter">Facebook</a>
                 <a href="#" aria-label="Follow us on YouTube">YouTube</a>
               </div>
             </div>
@@ -118,5 +122,5 @@ class KmacFooter extends HTMLElement {
 }
 
 // Đăng ký component
-customElements.define('kmac-header', KmacHeader);
-customElements.define('kmac-footer', KmacFooter);
+customElements.define("kmac-header", KmacHeader);
+customElements.define("kmac-footer", KmacFooter);
