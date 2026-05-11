@@ -4,8 +4,8 @@ const CART_COOKIE = "kmac_cart";
 const CART_DAYS = 7;
 
 const COUPONS = {
-  KMAC10: { type: "percent", value: 10, label: "10% off" },
-  WELCOME5: { type: "fixed", value: 5, label: "$5 off" },
+  KMAC10: { type: "percent", value: 10, label: "Giảm 10%" },
+  WELCOME5: { type: "fixed", value: 50000, label: "Giảm 50.000₫" },
 };
 
 function setCookie(name, value, days) {

@@ -1,8 +1,8 @@
 // ===== KMAC Tech — Value Formatters =====
 
 const KMAC_FORMAT = {
-  locale: "en-US",
-  currency: "USD",
+  locale: "vi-VN",
+  currency: "VND",
 };
 
 function toFiniteNumber(value, fallback = 0) {
@@ -21,8 +21,8 @@ function formatCurrency(value, options = {}) {
   return new Intl.NumberFormat(options.locale || KMAC_FORMAT.locale, {
     style: "currency",
     currency: options.currency || KMAC_FORMAT.currency,
-    minimumFractionDigits: options.minimumFractionDigits ?? 2,
-    maximumFractionDigits: options.maximumFractionDigits ?? 2,
+    minimumFractionDigits: options.minimumFractionDigits ?? 0,
+    maximumFractionDigits: options.maximumFractionDigits ?? 0,
   }).format(toFiniteNumber(value));
 }
 
