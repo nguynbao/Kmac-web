@@ -104,7 +104,7 @@ class KmacFooter extends HTMLElement {
               <div class="footer-links">
                 <a href="#" aria-label="Follow us on Instagram">Instagram</a>
                 <a href="https://www.tiktok.com/@kmacdanang" aria-label="Follow us on TikTok">TikTok</a>
-                <a href="#https://www.facebook.com/profile.php?id=61576325795691" aria-label="Follow us on Twitter">Facebook</a>
+                <a href="https://www.facebook.com/profile.php?id=61576325795691" aria-label="Follow us on Facebook">Facebook</a>
                 <a href="#" aria-label="Follow us on YouTube">YouTube</a>
               </div>
             </div>
